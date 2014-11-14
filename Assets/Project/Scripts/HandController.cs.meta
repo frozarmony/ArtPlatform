@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2c4e0350c46ae405b8db39262c18b8f5
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - prefabTest: {fileID: 5400000, guid: 2acf9c8e812eff6459715d2b3dce2c96, type: 2}
+  - leftGraphicsModel: {instanceID: 0}
+  - leftPhysicsModel: {instanceID: 0}
+  - rightGraphicsModel: {instanceID: 0}
+  - rightPhysicsModel: {instanceID: 0}
+  - toolModel: {instanceID: 0}
+  - recordingAsset: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 

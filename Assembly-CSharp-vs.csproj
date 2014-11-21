@@ -64,10 +64,12 @@
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Utils\LeapRecorder.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Utils\LeapUnityExtensions.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Utils\MagneticPinch.cs" />
-     <Compile Include="Assets\Project\Scripts\ButtonTrigger.cs" />
      <Compile Include="Assets\Project\Scripts\HandController.cs" />
      <Compile Include="Assets\Project\Scripts\LeapListener.cs" />
      <Compile Include="Assets\Project\Scripts\MainManager.cs" />
+     <Compile Include="Assets\Project\Scripts\Menu\AbstractHandInterface.cs" />
+     <Compile Include="Assets\Project\Scripts\Menu\ButtonTrigger.cs" />
+     <Compile Include="Assets\Project\Scripts\Menu\MenuInterface.cs" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Imports\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Imports\LeapMotion\readme.txt" />

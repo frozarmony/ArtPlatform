@@ -14,7 +14,7 @@ public class ButtonTrigger : MonoBehaviour {
 	}
 
 	// Trigger Handling
-	void OnTriggerEnter(Collider collid){
+	void OnTriggerExit(Collider collid){
 		manager.NotifyButtonPush (handAnchorId);
 	}
 }

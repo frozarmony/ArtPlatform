@@ -54,7 +54,7 @@ public class HandController : MonoBehaviour {
 
 	// Main References
 	private MainManager mainManager;
-	private LeapListener leaplistener;
+	//private LeapListener leaplistener;
 
 	/****************
 	 * Main Methods *
@@ -78,9 +78,9 @@ public class HandController : MonoBehaviour {
 		mainManager.SetHandController (this);
 
 		// LeapListener Initialization
-		leaplistener = new LeapListener ();
+		/*leaplistener = new LeapListener ();
 		leaplistener.rocket = ((GameObject)Resources.Load("Flame")).rigidbody;
-		leap_controller_.AddListener (leaplistener);
+		leap_controller_.AddListener (leaplistener);*/
 		
 		if (enableRecordPlayback && recordingAsset != null)
 			recorder_.Load(recordingAsset);
@@ -94,7 +94,7 @@ public class HandController : MonoBehaviour {
 		UpdateRecorder();
 		Frame frame = GetFrame();
 		UpdateHandModels(hand_graphics_, frame.Hands, leftGraphicsModel, rightGraphicsModel);
-		leaplistener.OnNewFrame (leap_controller_);
+		//leaplistener.OnNewFrame (leap_controller_);
 	}
 	
 	void FixedUpdate() {
@@ -108,7 +108,7 @@ public class HandController : MonoBehaviour {
 
 	// Destroy
 	void OnDestroy(){
-		leap_controller_.RemoveListener (leaplistener);			// Remove Listener to Prevent Unity Crash
+		//leap_controller_.RemoveListener (leaplistener);			// Remove Listener to Prevent Unity Crash
 	}
 
 	/****************

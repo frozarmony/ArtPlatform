@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class MainManager : MonoBehaviour {
 
@@ -18,14 +18,20 @@ public class MainManager : MonoBehaviour {
 	public const int HAND_ANCHOR_PINKY			= 7;
 	public const int HAND_ANCHOR_COUNT			= 8;
 
-	/****************
-	 *   Prefabs    *
-	 ****************/
+	/*************************
+	 *    Button's Prefabs   *
+	 *************************/
 
-	public GameObject testButton;
+	public GameObject openButton;
+	public GameObject closeButton;
+	public GameObject backButton;
+	public GameObject nextButton;
+	public GameObject previousButton;
+	public GameObject matMenuButton;
+	public GameObject modMenuButton;
 
 	/****************
-	 *  Properties  *
+	 *  References  *
 	 ****************/
 
 	// Main References
@@ -34,13 +40,28 @@ public class MainManager : MonoBehaviour {
 	// Hand's Anchor References
 	private Transform[] handAnchors;
 
+	// Menu's Reference
+	private HandMenu currentMenu;
+	private Dictionary<string, HandMenu> menusIndex;
+
 	/****************
 	 * Constructor  *
 	 ****************/
 
 	public MainManager(){
+		// Init References
 		handController = null;
 		handAnchors = new Transform[HAND_ANCHOR_COUNT];
+		menusIndex = new Dictionary<string, HandMenu> ();
+
+		// Init Menus Index
+		currentMenu = null;
+		InitMenusIndex ();
+	}
+
+	private void InitMenusIndex(){
+		menusIndex ["ClosedMenu"] = new ClosedMenu (this);
+		menusIndex ["PaintMenu"] = new PaintMenu (this);
 	}
 
 	/****************
@@ -65,8 +86,6 @@ public class MainManager : MonoBehaviour {
 			handAnchors[HAND_ANCHOR_MIDDLE]			= model.transform.GetChild(1).GetChild(2);
 			handAnchors[HAND_ANCHOR_RING]			= model.transform.GetChild(4).GetChild(2);
 			handAnchors[HAND_ANCHOR_PINKY]			= model.transform.GetChild(3).GetChild(2);
-
-			AddHandButton(HAND_ANCHOR_PALM, testButton);
 		}
 	}
 	
@@ -82,7 +101,23 @@ public class MainManager : MonoBehaviour {
 	 * Tool Methods *
 	 ****************/
 
-	private void AddHandButton(int handAnchorId, GameObject buttonPrefab){
+	public void LoadMenu(string menuName){
+		if (!menusIndex.ContainsKey (menuName)) {
+				Debug.LogError ("HandMenu '" + menuName + "' does not exist!");
+		}
+		else {
+			// Unload Current Menu if needed
+			if( currentMenu != null )
+				for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
+					UnloadHandButton(i);
+
+			// Load Menu
+			currentMenu = menusIndex[menuName];
+			currentMenu.OnLoad();
+		}
+	}
+
+	public void LoadHandButton(int handAnchorId, GameObject buttonPrefab){
 		if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
 			Debug.LogError ("HandAnchorId does not exist!");
 		}
@@ -95,6 +130,18 @@ public class MainManager : MonoBehaviour {
 			// Create and Add ButtonTrigger script
 			ButtonTrigger trig = tmp.AddComponent<ButtonTrigger>();
 			trig.InitButtonTrigger(this, handAnchorId);
+		}
+	}
+
+	public void UnloadHandButton(int handAnchorId){
+		if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
+			Debug.LogError ("HandAnchorId does not exist!");
+		}
+		else {
+			// If Anchor has Child, destroy it
+			for(int i=0; i<handAnchors[handAnchorId].childCount; ++i){
+				Object.Destroy(handAnchors[handAnchorId].GetChild(i));
+			}
 		}
 	}
 

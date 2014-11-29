@@ -195,6 +195,8 @@ public class HandController : MonoBehaviour {
 			Destroy(hand_model.gameObject);
 		else
 			hand_model.SetLeapHand(null);
+
+		mainManager.SyncHand (null);
 	}
 	
 	/****************

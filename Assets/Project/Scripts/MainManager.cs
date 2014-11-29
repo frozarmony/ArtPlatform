@@ -18,6 +18,10 @@ public class MainManager : MonoBehaviour {
 	public const int HAND_ANCHOR_PINKY			= 7;
 	public const int HAND_ANCHOR_COUNT			= 8;
 
+	// Opening Coeficient
+	public const float OPENING_RANGE_COEF		= 7.4f;
+	public const float OPENING_OFFSET_COEF		= 3.6f;
+
 	/*************************
 	 *    Button's Prefabs   *
 	 *************************/
@@ -79,7 +83,10 @@ public class MainManager : MonoBehaviour {
 
 	public void SyncHand(HandModel model){
 		if (model == null) {
+			// Left Hand is not selected
 			leftHandIsSynched = false;
+			
+			// Sync Hand's Anchors
 			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
 				handAnchors[i] = null;
 		}
@@ -102,6 +109,14 @@ public class MainManager : MonoBehaviour {
 				currentMenu.OnLoad();
 		}
 	}
+
+	/*****************
+	 *    Update     *
+	 *****************/
+
+	public void Update(){
+
+	}
 	
 	/*****************
 	 * Event Methods *
@@ -112,8 +127,25 @@ public class MainManager : MonoBehaviour {
 			currentMenu.OnTouch (handAnchorId);
 	}
 
+	/*******************
+	 * Gesture Methods *
+	 *******************/
+
+	private float OpeningCoef(){
+		// Compute Coef
+		Vector3 palmPos = handAnchors [HAND_ANCHOR_PALM].position;
+		float dists = 0f;
+		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_INDEX].position);
+		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_MIDDLE].position);
+		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_RING].position);
+		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_PINKY].position);
+
+		// Normalized Coef
+		return Mathf.Clamp01((dists-OPENING_OFFSET_COEF)/OPENING_RANGE_COEF);
+	}
+
 	/****************
-	 * Tool Methods *
+	 * Menu Methods *
 	 ****************/
 
 	public void LoadMenu(string menuName){

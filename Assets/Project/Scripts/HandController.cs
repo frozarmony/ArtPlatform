@@ -124,7 +124,7 @@ public class HandController : MonoBehaviour {
 
 		// Synchronisation with MainManager
 		if(model == leftPhysicsModel)
-			mainManager.SyncHandAnchor (hand_model);
+			mainManager.SyncHand (hand_model);
 
 		return hand_model;
 	}

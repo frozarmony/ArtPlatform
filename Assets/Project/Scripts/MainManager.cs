@@ -38,6 +38,7 @@ public class MainManager : MonoBehaviour {
 	private HandController handController;
 
 	// Hand's Anchor References
+	private bool leftHandIsSynched;
 	private Transform[] handAnchors;
 
 	// Menu's Reference
@@ -51,12 +52,16 @@ public class MainManager : MonoBehaviour {
 	public MainManager(){
 		// Init References
 		handController = null;
+		leftHandIsSynched = false;
 		handAnchors = new Transform[HAND_ANCHOR_COUNT];
 		menusIndex = new Dictionary<string, HandMenu> ();
 
 		// Init Menus Index
 		currentMenu = null;
 		InitMenusIndex ();
+
+		// Load Main Menu
+		LoadMenu("ClosedMenu");
 	}
 
 	private void InitMenusIndex(){
@@ -72,12 +77,17 @@ public class MainManager : MonoBehaviour {
 		handController = ctrl;
 	}
 
-	public void SyncHandAnchor(HandModel model){
+	public void SyncHand(HandModel model){
 		if (model == null) {
+			leftHandIsSynched = false;
 			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
 				handAnchors[i] = null;
 		}
 		else {
+			// Left Hand is selected
+			leftHandIsSynched = true;
+
+			// Sync Hand's Anchors
 			handAnchors[HAND_ANCHOR_PALM]			= model.transform.GetChild(2);
 			handAnchors[HAND_ANCHOR_THUMB_BASE]		= model.transform.GetChild(5).GetChild(0);
 			handAnchors[HAND_ANCHOR_THUMB_MIDDLE]	= model.transform.GetChild(5).GetChild(1);
@@ -86,6 +96,10 @@ public class MainManager : MonoBehaviour {
 			handAnchors[HAND_ANCHOR_MIDDLE]			= model.transform.GetChild(1).GetChild(2);
 			handAnchors[HAND_ANCHOR_RING]			= model.transform.GetChild(4).GetChild(2);
 			handAnchors[HAND_ANCHOR_PINKY]			= model.transform.GetChild(3).GetChild(2);
+
+			// Reload Current Menu if needed
+			if(currentMenu != null)
+				currentMenu.OnLoad();
 		}
 	}
 	
@@ -94,7 +108,8 @@ public class MainManager : MonoBehaviour {
 	 *****************/
 
 	public void NotifyButtonPush(int handAnchorId){
-		Debug.Log ("Button pushed on id : " + handAnchorId);
+		if (currentMenu != null)
+			currentMenu.OnTouch (handAnchorId);
 	}
 
 	/****************
@@ -102,6 +117,7 @@ public class MainManager : MonoBehaviour {
 	 ****************/
 
 	public void LoadMenu(string menuName){
+		Debug.Log("Try to Load : " + menuName);
 		if (!menusIndex.ContainsKey (menuName)) {
 				Debug.LogError ("HandMenu '" + menuName + "' does not exist!");
 		}
@@ -118,31 +134,37 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void LoadHandButton(int handAnchorId, GameObject buttonPrefab){
-		if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-			Debug.LogError ("HandAnchorId does not exist!");
-		}
-		else {
-			// Create Hand Button in Hand Anchor
-			GameObject tmp = (GameObject)Object.Instantiate(buttonPrefab);
-			tmp.transform.parent = handAnchors[handAnchorId];
-			tmp.transform.localPosition = Vector3.zero;
-
-			// Create and Add ButtonTrigger script
-			ButtonTrigger trig = tmp.AddComponent<ButtonTrigger>();
-			trig.InitButtonTrigger(this, handAnchorId);
+		if (leftHandIsSynched){
+			if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
+				Debug.LogError ("HandAnchorId does not exist!");
+			} else if (buttonPrefab == null) {
+				Debug.LogError ("ButtonPrefab reference is null for anchor : " + handAnchorId );
+			}
+			else {
+				// Create Hand Button in Hand Anchor
+				GameObject tmp = (GameObject)Object.Instantiate (buttonPrefab);
+				tmp.transform.localRotation = handAnchors [handAnchorId].transform.rotation;
+				tmp.transform.parent = handAnchors [handAnchorId];
+				tmp.transform.localPosition = Vector3.zero;
+			
+				// Create and Add ButtonTrigger script
+				ButtonTrigger trig = tmp.AddComponent<ButtonTrigger> ();
+				trig.InitButtonTrigger (this, handAnchorId);
+			}
 		}
 	}
 
 	public void UnloadHandButton(int handAnchorId){
-		if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-			Debug.LogError ("HandAnchorId does not exist!");
-		}
-		else {
-			// If Anchor has Child, destroy it
-			for(int i=0; i<handAnchors[handAnchorId].childCount; ++i){
-				Object.Destroy(handAnchors[handAnchorId].GetChild(i));
+		if (leftHandIsSynched)
+			if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
+				Debug.LogError ("HandAnchorId does not exist!");
 			}
-		}
+			else {
+				// If Anchor has Child, destroy it
+				for(int i=0; i<handAnchors[handAnchorId].childCount; ++i){
+					Object.Destroy(handAnchors[handAnchorId].GetChild(i).gameObject);
+				}
+			}
 	}
 
 }

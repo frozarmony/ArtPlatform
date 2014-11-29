@@ -15,6 +15,7 @@ public class ButtonTrigger : MonoBehaviour {
 
 	// Trigger Handling
 	void OnTriggerExit(Collider collid){
-		manager.NotifyButtonPush (handAnchorId);
+		if(collid.tag == "BoneTriggerer")
+			manager.NotifyButtonPush (handAnchorId);
 	}
 }

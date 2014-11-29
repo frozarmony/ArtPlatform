@@ -71,6 +71,8 @@
      <Compile Include="Assets\Project\Scripts\Menu\ClosedMenu.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\HandMenu.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\PaintMenu.cs" />
+     <Compile Include="Assets\Project\Scripts\Paint\AbstractAction.cs" />
+     <Compile Include="Assets\Project\Scripts\Paint\SimplePickAction.cs" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Imports\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Imports\LeapMotion\readme.txt" />

@@ -33,6 +33,12 @@ public class MainManager : MonoBehaviour {
 	public GameObject previousButton;
 	public GameObject matMenuButton;
 	public GameObject modMenuButton;
+	
+	/*************************
+	 *    Canvas's Prefab    *
+	 *************************/
+	
+	public GameObject canvasPrefab;
 
 	/****************
 	 *  References  *
@@ -49,6 +55,11 @@ public class MainManager : MonoBehaviour {
 	private HandMenu currentMenu;
 	private Dictionary<string, HandMenu> menusIndex;
 
+	// Paint's Reference
+	private GameObject currentCanvas;
+	private Queue<AbstractAction> doneAction;
+	private Queue<AbstractAction> undoneAction;
+	
 	/****************
 	 * Constructor  *
 	 ****************/
@@ -59,6 +70,9 @@ public class MainManager : MonoBehaviour {
 		leftHandIsSynched = false;
 		handAnchors = new Transform[HAND_ANCHOR_COUNT];
 		menusIndex = new Dictionary<string, HandMenu> ();
+		currentCanvas = null;
+		doneAction = new Queue<AbstractAction> ();
+		undoneAction = new Queue<AbstractAction> ();
 
 		// Init Menus Index
 		currentMenu = null;
@@ -107,6 +121,9 @@ public class MainManager : MonoBehaviour {
 			// Reload Current Menu if needed
 			if(currentMenu != null)
 				currentMenu.OnLoad();
+
+			// Create Empty Canvas
+			CreateNewCanvas();
 		}
 	}
 
@@ -187,16 +204,61 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void UnloadHandButton(int handAnchorId){
-		if (leftHandIsSynched)
+		if (leftHandIsSynched) {
 			if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-				Debug.LogError ("HandAnchorId does not exist!");
+					Debug.LogError ("HandAnchorId does not exist!");
+			} else {
+					// If Anchor has Child, destroy it
+					for (int i=0; i<handAnchors[handAnchorId].childCount; ++i) {
+							Object.Destroy (handAnchors [handAnchorId].GetChild (i).gameObject);
+					}
 			}
-			else {
-				// If Anchor has Child, destroy it
-				for(int i=0; i<handAnchors[handAnchorId].childCount; ++i){
-					Object.Destroy(handAnchors[handAnchorId].GetChild(i).gameObject);
-				}
-			}
+		}
+	}
+	
+	/******************
+	 * Paint Methods  *
+	 ******************/
+
+	public void CreateNewCanvas(){
+		currentCanvas = (GameObject)Instantiate (canvasPrefab, Vector3.zero, Quaternion.identity);
+	}
+
+	public GameObject PaintOnCanvas(GameObject matPrefab, Vector3 pos, Quaternion rotation){
+		if (currentCanvas == null) {
+			Debug.LogError ("Can't paint : No canvas!");
+			return null;
+		}
+		else {
+			GameObject matInstance = (GameObject)Instantiate (matPrefab, pos, rotation);
+			matInstance.transform.parent = currentCanvas.transform;
+			return matInstance;
+		}
+	}
+
+	/**********************
+	 * Undo/Redo Methods  *
+	 **********************/
+
+	public void DoAction(AbstractAction action){
+		action.Do ();
+		doneAction.Enqueue (action);
+	}
+
+	public void UndoAction(){
+		if (doneAction.Count != 0) {
+			AbstractAction action = doneAction.Dequeue();
+			action.Undo();
+			undoneAction.Enqueue(action);
+		}
+	}
+	
+	public void RedoAction(){
+		if (undoneAction.Count != 0) {
+			AbstractAction action = undoneAction.Dequeue();
+			action.Do ();
+			doneAction.Enqueue(action);
+		}
 	}
 
 }

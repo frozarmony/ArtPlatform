@@ -15,7 +15,7 @@ public class PaintMenu : HandMenu {
 	 *  Constructor   *
 	 ******************/
 	
-	public PaintMenu(MainManager manager) : base(manager){
+	public PaintMenu(MainManager manager) : base(manager, MainManager.ContextOfGesture.Menu){
 		closeButtonId = HandManager.HAND_ANCHOR_PALM;
 		matButtonId = HandManager.HAND_ANCHOR_THUMB_MIDDLE;
 		modButtonId = HandManager.HAND_ANCHOR_THUMB_BASE;

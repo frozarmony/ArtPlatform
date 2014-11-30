@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using Leap;
 
 public class MainManager : MonoBehaviour {
+	
+	/*************************
+	 *       Constants       *
+	 *************************/
+
+	public enum ContextOfGesture {Undefined, Menu, PaintMode};
+	public enum PaintMode {SimplePicking};
 
 	/*************************
 	 *    Button's Prefabs   *
@@ -39,43 +46,63 @@ public class MainManager : MonoBehaviour {
 	private HandMenu currentMenu;
 	private Dictionary<string, HandMenu> menusIndex;
 
+	// Context of Gesture's Reference
+	private ContextOfGesture currentContext;
+	private List<GestureTracker> gestureTrackers;
+	private SimplePickTracker simplePickTracker;
+
 	// Paint's Reference
 	private GameObject currentCanvas;
+	private PaintMode currentPaintMode;
 	private Queue<AbstractAction> doneAction;
 	private Queue<AbstractAction> undoneAction;
-
-	private GestureTracker test;
 	
 	/****************
 	 * Constructor  *
 	 ****************/
 
 	public MainManager(){
-		// Init References
+		// Init Main References
 		handController = null;
 		leftHand = new HandManager (this);
 		rightHand = new HandManager (this);
+		
+		// Init Menu's References
 		menusIndex = new Dictionary<string, HandMenu> ();
+
+		// Init Context of Gesture's Reference
+		gestureTrackers = new List<GestureTracker> ();
+		
+		// Init Paint's References
 		currentCanvas = null;
 		doneAction = new Queue<AbstractAction> ();
 		undoneAction = new Queue<AbstractAction> ();
 	}
 
 	public void Start(){
-		// Init Menus Index
-		currentMenu = null;
+		// Init Menu's Index
 		InitMenusIndex ();
+
+		// Init Contexts Of Gesture
+		InitContextsOfGesture ();
 		
 		// Load Main Menu
 		LoadMenu("ClosedMenu");
 		
 		// Create Empty Canvas
 		CreateNewCanvas();
+		currentPaintMode = PaintMode.SimplePicking;
 	}
-
+	
 	private void InitMenusIndex(){
+		currentMenu = null;
 		menusIndex ["ClosedMenu"] = new ClosedMenu (this);
 		menusIndex ["PaintMenu"] = new PaintMenu (this);
+	}
+
+	private void InitContextsOfGesture(){
+		currentContext = ContextOfGesture.Undefined;
+		simplePickTracker = new SimplePickTracker (this, rightHand);
 	}
 
 	/****************
@@ -84,8 +111,6 @@ public class MainManager : MonoBehaviour {
 
 	public void SetHandController(HandController ctrl){
 		handController = ctrl;
-		test = new SimplePickTracker (this, rightHand);
-		test.OnLoad ();
 	}
 
 	/*****************
@@ -93,7 +118,9 @@ public class MainManager : MonoBehaviour {
 	 *****************/
 
 	public void Update(){
-		test.OnUpdate ();
+		// Update each GestureTracker
+		foreach(GestureTracker tracker in gestureTrackers)
+			tracker.OnUpdate();
 	}
 	
 	/*****************
@@ -122,7 +149,6 @@ public class MainManager : MonoBehaviour {
 	 ****************/
 
 	public void LoadMenu(string menuName){
-		Debug.Log("Try to Load : " + menuName);
 		if (!menusIndex.ContainsKey (menuName)) {
 				Debug.LogError ("HandMenu '" + menuName + "' does not exist!");
 		}
@@ -135,6 +161,9 @@ public class MainManager : MonoBehaviour {
 			// Load Menu
 			currentMenu = menusIndex[menuName];
 			currentMenu.OnLoad();
+
+			// Set Corresponding Context of Gesture
+			SetContextOfGesture(currentMenu.GetContextOfGesture());
 		}
 	}
 
@@ -166,6 +195,38 @@ public class MainManager : MonoBehaviour {
 			for (int i=0; i<anchor.childCount; ++i) {
 				Object.Destroy (anchor.GetChild (i).gameObject);
 			}
+		}
+	}
+	
+	/******************************
+	 * Context of Gesture Methods *
+	 ******************************/
+
+	public void SetContextOfGesture(ContextOfGesture newContext){
+		if (currentContext != newContext) {
+			// Unload Old Context
+			foreach(GestureTracker tracker in gestureTrackers)
+				tracker.OnUnload();
+			gestureTrackers.Clear();
+
+			// Load New Context
+			switch(newContext)
+			{
+				// Menu Context
+				case ContextOfGesture.Menu:
+					// Do Nothing
+					break;
+				// PaintMode
+				case ContextOfGesture.PaintMode:
+					if(currentPaintMode == PaintMode.SimplePicking)
+						gestureTrackers.Add(simplePickTracker);
+					break;
+				default:
+					// Do Nothing
+					break;
+			}
+			foreach(GestureTracker tracker in gestureTrackers)
+				tracker.OnLoad();
 		}
 	}
 	

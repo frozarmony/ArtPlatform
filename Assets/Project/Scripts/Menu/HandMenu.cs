@@ -8,13 +8,23 @@ public abstract class HandMenu {
 	 ****************/
 
 	protected MainManager manager;
+	private MainManager.ContextOfGesture contextGesture;
 	
 	/******************
 	 *  Constructor   *
 	 ******************/
 
-	public HandMenu(MainManager mainManager){
+	public HandMenu(MainManager mainManager, MainManager.ContextOfGesture contextGestureRef){
 		this.manager = mainManager;
+		this.contextGesture = contextGestureRef;
+	}
+	
+	/******************
+	 *    Getters     *
+	 ******************/
+
+	public MainManager.ContextOfGesture GetContextOfGesture(){
+		return contextGesture;
 	}
 
 	/******************

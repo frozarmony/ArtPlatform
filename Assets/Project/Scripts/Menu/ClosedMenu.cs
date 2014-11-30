@@ -13,7 +13,7 @@ public class ClosedMenu : HandMenu {
 	 *  Constructor   *
 	 ******************/
 
-	public ClosedMenu(MainManager manager) : base(manager){
+	public ClosedMenu(MainManager manager) : base(manager, MainManager.ContextOfGesture.PaintMode){
 		openButtonId = HandManager.HAND_ANCHOR_PALM;
 	}
 

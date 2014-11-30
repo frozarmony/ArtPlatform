@@ -24,8 +24,8 @@ public class SimplePickTracker : GestureTracker {
 	 *  Constructor   *
 	 ******************/
 	
-	public SimplePickTracker(MainManager manager, HandManager hand) : base(manager){
-		this.rightHand = hand;
+	public SimplePickTracker(MainManager manager, HandManager rightHandRef) : base(manager){
+		this.rightHand = rightHandRef;
 		this.pickedElement = null;
 		this.meetedConditionCount = 0;
 	}

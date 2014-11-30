@@ -14,7 +14,7 @@ public class ClosedMenu : HandMenu {
 	 ******************/
 
 	public ClosedMenu(MainManager manager) : base(manager){
-		openButtonId = MainManager.HAND_ANCHOR_PALM;
+		openButtonId = HandManager.HAND_ANCHOR_PALM;
 	}
 
 	/******************

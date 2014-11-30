@@ -10,6 +10,7 @@ MonoImporter:
   - previousButton: {fileID: 100000, guid: fed3046749d522440b0a8cc0746bc593, type: 2}
   - matMenuButton: {fileID: 100000, guid: fed3046749d522440b0a8cc0746bc593, type: 2}
   - modMenuButton: {fileID: 100000, guid: fed3046749d522440b0a8cc0746bc593, type: 2}
+  - canvasPrefab: {fileID: 100000, guid: 07a378d70d673bb4f85c72115ad0a9f2, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -1,26 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Leap;
 
 public class MainManager : MonoBehaviour {
-
-	/****************
-	 *   Constants  *
-	 ****************/
-
-	// Hand's Anchors Ids
-	public const int HAND_ANCHOR_PALM			= 0;
-	public const int HAND_ANCHOR_THUMB_BASE		= 1;
-	public const int HAND_ANCHOR_THUMB_MIDDLE	= 2;
-	public const int HAND_ANCHOR_THUMB			= 3;
-	public const int HAND_ANCHOR_INDEX			= 4;
-	public const int HAND_ANCHOR_MIDDLE			= 5;
-	public const int HAND_ANCHOR_RING			= 6;
-	public const int HAND_ANCHOR_PINKY			= 7;
-	public const int HAND_ANCHOR_COUNT			= 8;
-
-	// Opening Coeficient
-	public const float OPENING_RANGE_COEF		= 7.4f;
-	public const float OPENING_OFFSET_COEF		= 3.6f;
 
 	/*************************
 	 *    Button's Prefabs   *
@@ -40,6 +22,8 @@ public class MainManager : MonoBehaviour {
 	
 	public GameObject canvasPrefab;
 
+	public GameObject matTest;
+
 	/****************
 	 *  References  *
 	 ****************/
@@ -48,8 +32,8 @@ public class MainManager : MonoBehaviour {
 	private HandController handController;
 
 	// Hand's Anchor References
-	private bool leftHandIsSynched;
-	private Transform[] handAnchors;
+	private HandManager leftHand;
+	private HandManager rightHand;
 
 	// Menu's Reference
 	private HandMenu currentMenu;
@@ -59,6 +43,8 @@ public class MainManager : MonoBehaviour {
 	private GameObject currentCanvas;
 	private Queue<AbstractAction> doneAction;
 	private Queue<AbstractAction> undoneAction;
+
+	private GestureTracker test;
 	
 	/****************
 	 * Constructor  *
@@ -67,19 +53,24 @@ public class MainManager : MonoBehaviour {
 	public MainManager(){
 		// Init References
 		handController = null;
-		leftHandIsSynched = false;
-		handAnchors = new Transform[HAND_ANCHOR_COUNT];
+		leftHand = new HandManager (this);
+		rightHand = new HandManager (this);
 		menusIndex = new Dictionary<string, HandMenu> ();
 		currentCanvas = null;
 		doneAction = new Queue<AbstractAction> ();
 		undoneAction = new Queue<AbstractAction> ();
+	}
 
+	public void Start(){
 		// Init Menus Index
 		currentMenu = null;
 		InitMenusIndex ();
-
+		
 		// Load Main Menu
 		LoadMenu("ClosedMenu");
+		
+		// Create Empty Canvas
+		CreateNewCanvas();
 	}
 
 	private void InitMenusIndex(){
@@ -93,38 +84,8 @@ public class MainManager : MonoBehaviour {
 
 	public void SetHandController(HandController ctrl){
 		handController = ctrl;
-	}
-
-	public void SyncHand(HandModel model){
-		if (model == null) {
-			// Left Hand is not selected
-			leftHandIsSynched = false;
-			
-			// Sync Hand's Anchors
-			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
-				handAnchors[i] = null;
-		}
-		else {
-			// Left Hand is selected
-			leftHandIsSynched = true;
-
-			// Sync Hand's Anchors
-			handAnchors[HAND_ANCHOR_PALM]			= model.transform.GetChild(2);
-			handAnchors[HAND_ANCHOR_THUMB_BASE]		= model.transform.GetChild(5).GetChild(0);
-			handAnchors[HAND_ANCHOR_THUMB_MIDDLE]	= model.transform.GetChild(5).GetChild(1);
-			handAnchors[HAND_ANCHOR_THUMB]			= model.transform.GetChild(5).GetChild(2);
-			handAnchors[HAND_ANCHOR_INDEX]			= model.transform.GetChild(0).GetChild(2);
-			handAnchors[HAND_ANCHOR_MIDDLE]			= model.transform.GetChild(1).GetChild(2);
-			handAnchors[HAND_ANCHOR_RING]			= model.transform.GetChild(4).GetChild(2);
-			handAnchors[HAND_ANCHOR_PINKY]			= model.transform.GetChild(3).GetChild(2);
-
-			// Reload Current Menu if needed
-			if(currentMenu != null)
-				currentMenu.OnLoad();
-
-			// Create Empty Canvas
-			CreateNewCanvas();
-		}
+		test = new SimplePickTracker (this, rightHand);
+		test.OnLoad ();
 	}
 
 	/*****************
@@ -132,7 +93,7 @@ public class MainManager : MonoBehaviour {
 	 *****************/
 
 	public void Update(){
-
+		test.OnUpdate ();
 	}
 	
 	/*****************
@@ -144,21 +105,16 @@ public class MainManager : MonoBehaviour {
 			currentMenu.OnTouch (handAnchorId);
 	}
 
-	/*******************
-	 * Gesture Methods *
-	 *******************/
+	public void SyncLeftHand(HandModel model){
+		leftHand.SyncHand (model);
 
-	private float OpeningCoef(){
-		// Compute Coef
-		Vector3 palmPos = handAnchors [HAND_ANCHOR_PALM].position;
-		float dists = 0f;
-		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_INDEX].position);
-		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_MIDDLE].position);
-		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_RING].position);
-		dists += Vector3.Distance (palmPos, handAnchors [HAND_ANCHOR_PINKY].position);
-
-		// Normalized Coef
-		return Mathf.Clamp01((dists-OPENING_OFFSET_COEF)/OPENING_RANGE_COEF);
+		// Reload Current Menu if needed
+		if(leftHand.IsSynchronized() && currentMenu != null)
+			currentMenu.OnLoad();
+	}
+	
+	public void SyncRightHand(HandModel model){
+		rightHand.SyncHand (model);
 	}
 
 	/****************
@@ -173,7 +129,7 @@ public class MainManager : MonoBehaviour {
 		else {
 			// Unload Current Menu if needed
 			if( currentMenu != null )
-				for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
+				for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i)
 					UnloadHandButton(i);
 
 			// Load Menu
@@ -183,17 +139,15 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void LoadHandButton(int handAnchorId, GameObject buttonPrefab){
-		if (leftHandIsSynched){
-			if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-				Debug.LogError ("HandAnchorId does not exist!");
-			} else if (buttonPrefab == null) {
+		if (leftHand.IsSynchronized()){
+			if (buttonPrefab == null) {
 				Debug.LogError ("ButtonPrefab reference is null for anchor : " + handAnchorId );
 			}
 			else {
 				// Create Hand Button in Hand Anchor
 				GameObject tmp = (GameObject)Object.Instantiate (buttonPrefab);
-				tmp.transform.localRotation = handAnchors [handAnchorId].transform.rotation;
-				tmp.transform.parent = handAnchors [handAnchorId];
+				tmp.transform.localRotation = leftHand.GetAnchor(handAnchorId).rotation;
+				tmp.transform.parent = leftHand.GetAnchor(handAnchorId);
 				tmp.transform.localPosition = Vector3.zero;
 			
 				// Create and Add ButtonTrigger script
@@ -202,16 +156,15 @@ public class MainManager : MonoBehaviour {
 			}
 		}
 	}
-
+	
 	public void UnloadHandButton(int handAnchorId){
-		if (leftHandIsSynched) {
-			if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-					Debug.LogError ("HandAnchorId does not exist!");
-			} else {
-					// If Anchor has Child, destroy it
-					for (int i=0; i<handAnchors[handAnchorId].childCount; ++i) {
-							Object.Destroy (handAnchors [handAnchorId].GetChild (i).gameObject);
-					}
+		if (leftHand.IsSynchronized()) {
+			// Get Anchor
+			Transform anchor = leftHand.GetAnchor(handAnchorId);
+
+			// If Anchor has a Child, destroy it
+			for (int i=0; i<anchor.childCount; ++i) {
+				Object.Destroy (anchor.GetChild (i).gameObject);
 			}
 		}
 	}

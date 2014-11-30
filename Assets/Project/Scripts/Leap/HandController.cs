@@ -46,7 +46,7 @@ public class HandController : MonoBehaviour {
 	
 	private LeapRecorder recorder_ = new LeapRecorder();
 	
-	private Controller leap_controller_;
+	public Controller leap_controller_;
 	
 	private Dictionary<int, HandModel> hand_graphics_;
 	private Dictionary<int, HandModel> hand_physics_;
@@ -124,7 +124,9 @@ public class HandController : MonoBehaviour {
 
 		// Synchronisation with MainManager
 		if(model == leftPhysicsModel)
-			mainManager.SyncHand (hand_model);
+			mainManager.SyncLeftHand (hand_model);
+		if(model == rightPhysicsModel)
+			mainManager.SyncRightHand (hand_model);
 
 		return hand_model;
 	}
@@ -191,12 +193,16 @@ public class HandController : MonoBehaviour {
 	
 	// Destroy Hand
 	private void DestroyHand(HandModel hand_model) {
+		// Synchronisation with MainManager
+		if(hand_model.name.StartsWith("RigidLeft"))
+			mainManager.SyncLeftHand (null);
+		if(hand_model.name.StartsWith("RigidRight"))
+			mainManager.SyncRightHand (null);
+
 		if (destroyHands)
 			Destroy(hand_model.gameObject);
 		else
 			hand_model.SetLeapHand(null);
-
-		mainManager.SyncHand (null);
 	}
 	
 	/****************

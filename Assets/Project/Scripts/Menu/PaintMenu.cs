@@ -16,9 +16,9 @@ public class PaintMenu : HandMenu {
 	 ******************/
 	
 	public PaintMenu(MainManager manager) : base(manager){
-		closeButtonId = MainManager.HAND_ANCHOR_PALM;
-		matButtonId = MainManager.HAND_ANCHOR_THUMB_MIDDLE;
-		modButtonId = MainManager.HAND_ANCHOR_THUMB_BASE;
+		closeButtonId = HandManager.HAND_ANCHOR_PALM;
+		matButtonId = HandManager.HAND_ANCHOR_THUMB_MIDDLE;
+		modButtonId = HandManager.HAND_ANCHOR_THUMB_BASE;
 	}
 	
 	/******************

@@ -35,8 +35,10 @@ public class SimplePickAction : AbstractAction {
 	public override void Undo(){
 		if (matInstance == null)
 			Debug.LogError ("Impossible to undo SimplePickAction : it's not already done.");
-		else
-			matInstance = manager.PaintOnCanvas (matPrefab, pickPos, Quaternion.identity);
+		else {
+			Object.Destroy(matInstance);
+			matInstance = null;
+		}
 	}
 
 }

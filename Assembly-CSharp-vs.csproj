@@ -65,8 +65,10 @@
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Utils\LeapUnityExtensions.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Utils\MagneticPinch.cs" />
      <Compile Include="Assets\Project\Scripts\Action\AbstractAction.cs" />
+     <Compile Include="Assets\Project\Scripts\Action\PaintAction.cs" />
      <Compile Include="Assets\Project\Scripts\Action\SimplePickAction.cs" />
      <Compile Include="Assets\Project\Scripts\Gesture\GestureTracker.cs" />
+     <Compile Include="Assets\Project\Scripts\Gesture\PaintTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Gesture\SimplePickTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Hand\HandManager.cs" />
      <Compile Include="Assets\Project\Scripts\Leap\HandController.cs" />

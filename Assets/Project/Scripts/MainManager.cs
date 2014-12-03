@@ -9,7 +9,7 @@ public class MainManager : MonoBehaviour {
 	 *************************/
 
 	public enum ContextOfGesture {Undefined, Menu, PaintMode};
-	public enum PaintMode {SimplePicking};
+	public enum PaintMode {SimplePicking, Painting};
 
 	/*************************
 	 *    Button's Prefabs   *
@@ -50,6 +50,7 @@ public class MainManager : MonoBehaviour {
 	private ContextOfGesture currentContext;
 	private List<GestureTracker> gestureTrackers;
 	private SimplePickTracker simplePickTracker;
+	private PaintTracker paintTracker;
 
 	// Paint's Reference
 	private GameObject currentCanvas;
@@ -86,12 +87,12 @@ public class MainManager : MonoBehaviour {
 		// Init Contexts Of Gesture
 		InitContextsOfGesture ();
 		
-		// Load Main Menu
-		LoadMenu("ClosedMenu");
-		
 		// Create Empty Canvas
 		CreateNewCanvas();
 		currentPaintMode = PaintMode.SimplePicking;
+		
+		// Load Main Menu
+		LoadMenu("ClosedMenu");
 	}
 	
 	private void InitMenusIndex(){
@@ -103,6 +104,7 @@ public class MainManager : MonoBehaviour {
 	private void InitContextsOfGesture(){
 		currentContext = ContextOfGesture.Undefined;
 		simplePickTracker = new SimplePickTracker (this, rightHand);
+		paintTracker = new PaintTracker (this, leftHand, rightHand);
 	}
 
 	/****************
@@ -212,18 +214,33 @@ public class MainManager : MonoBehaviour {
 			// Load New Context
 			switch(newContext)
 			{
-				// Menu Context
-				case ContextOfGesture.Menu:
-					// Do Nothing
+
+			// Menu Context
+			case ContextOfGesture.Menu:
+				// Do Nothing
+				break;
+
+			// PaintMode
+			case ContextOfGesture.PaintMode:
+
+				// Select correct PaintMode Tracker
+				switch(currentPaintMode)
+				{
+				// Simple Picking
+				case PaintMode.SimplePicking:
+					gestureTrackers.Add(simplePickTracker);
 					break;
-				// PaintMode
-				case ContextOfGesture.PaintMode:
-					if(currentPaintMode == PaintMode.SimplePicking)
-						gestureTrackers.Add(simplePickTracker);
+					
+				// Painting
+				case PaintMode.Painting:
+					gestureTrackers.Add(paintTracker);
 					break;
-				default:
-					// Do Nothing
-					break;
+				}
+				break;
+
+			default:
+				// Do Nothing
+				break;
 			}
 			foreach(GestureTracker tracker in gestureTrackers)
 				tracker.OnLoad();
@@ -257,6 +274,7 @@ public class MainManager : MonoBehaviour {
 	public void DoAction(AbstractAction action){
 		action.Do ();
 		doneAction.Enqueue (action);
+		undoneAction.Clear ();
 	}
 
 	public void UndoAction(){

@@ -46,6 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ButtonImport\scripts\InvisibleButton.cs" />
+     <Compile Include="Assets\ButtonImport\scripts\VisibleButton.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Hands\DebugFinger.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Hands\DebugHand.cs" />
      <Compile Include="Assets\Imports\LeapMotion\Scripts\Hands\FingerModel.cs" />

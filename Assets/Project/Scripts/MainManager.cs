@@ -18,7 +18,7 @@ public class MainManager : MonoBehaviour {
 
 	public GameObject openButton;
 	public GameObject closeButton;
-	public GameObject backButton;
+	public GameObject returnButton;
 	public GameObject nextButton;
 	public GameObject previousButton;
 	public GameObject matMenuButton;
@@ -191,8 +191,10 @@ public class MainManager : MonoBehaviour {
 			else {
 				// Create Hand Button in Hand Anchor
 				GameObject tmp = (GameObject)Object.Instantiate (buttonPrefab);
-				tmp.transform.localRotation = leftHand.GetAnchor(handAnchorId).rotation;
-				tmp.transform.parent = leftHand.GetAnchor(handAnchorId);
+				Transform anchor = leftHand.GetAnchor(handAnchorId);
+				tmp.transform.localRotation = anchor.rotation;
+				tmp.transform.Rotate(leftHand.GetButtonRotation(handAnchorId));
+				tmp.transform.parent = anchor;
 				tmp.transform.localPosition = Vector3.zero;
 			
 				// Create and Add ButtonTrigger script

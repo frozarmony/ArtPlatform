@@ -46,6 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\ButtonImport\scripts\BallBehaviourD.js" />
+     <Compile Include="Assets\ButtonImport\scripts\BallBehaviourG.js" />
+     <Compile Include="Assets\ButtonImport\scripts\BallControl.js" />
      <Compile Include="Assets\Imports\Standard Assets\Particles\Legacy Particles\TimedObjectDestructor.js" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Imports\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />

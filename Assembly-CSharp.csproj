@@ -67,6 +67,8 @@
      <Compile Include="Assets\Project\Scripts\Action\AbstractAction.cs" />
      <Compile Include="Assets\Project\Scripts\Action\PaintAction.cs" />
      <Compile Include="Assets\Project\Scripts\Action\SimplePickAction.cs" />
+     <Compile Include="Assets\Project\Scripts\ArtMaterial\ArtMaterial.cs" />
+     <Compile Include="Assets\Project\Scripts\ArtMaterial\ArtPaintingMaterial.cs" />
      <Compile Include="Assets\Project\Scripts\Gesture\GestureTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Gesture\PaintTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Gesture\SimplePickTracker.cs" />

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using Leap;
 
@@ -28,8 +29,12 @@ public class MainManager : MonoBehaviour {
 	 *************************/
 	
 	public GameObject canvasPrefab;
+	
+	/*************************
+	 *   Painter's Prefab    *
+	 *************************/
 
-	public GameObject matTest;
+	public GameObject painterPrefab;
 
 	/****************
 	 *  References  *
@@ -57,6 +62,12 @@ public class MainManager : MonoBehaviour {
 	private PaintMode currentPaintMode;
 	private Queue<AbstractAction> doneAction;
 	private Queue<AbstractAction> undoneAction;
+
+	// Palette's References
+	private List<ArtMaterial> simplePickPalette;
+	private List<ArtMaterial> paintingPalette;
+	private int cursorSimplePickPalette;
+	private int cursorPaintingPalette;
 	
 	/****************
 	 * Constructor  *
@@ -81,6 +92,9 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void Start(){
+		// Load & Init Palette
+		LoadPalette ();
+
 		// Init Menu's Index
 		InitMenusIndex ();
 
@@ -89,7 +103,7 @@ public class MainManager : MonoBehaviour {
 		
 		// Create Empty Canvas
 		CreateNewCanvas();
-		currentPaintMode = PaintMode.SimplePicking;
+		currentPaintMode = PaintMode.Painting;
 		
 		// Load Main Menu
 		LoadMenu("ClosedMenu");
@@ -291,6 +305,50 @@ public class MainManager : MonoBehaviour {
 			action.Do ();
 			doneAction.Enqueue(action);
 		}
+	}
+	
+	/*******************
+	 * Palette Methods *
+	 *******************/
+
+	private void LoadPalette(){
+		// Load Palette's Materials
+		ArtMaterial[] palette = Resources.LoadAll<ArtMaterial> ("Palette");
+		
+		// Init Sub-Palettes
+		simplePickPalette = new List<ArtMaterial> ();
+		paintingPalette = new List<ArtMaterial> ();
+		cursorSimplePickPalette = 0;
+		cursorPaintingPalette = 0;
+
+		// Sort Palettes
+		foreach (ArtMaterial mat in palette) {
+			switch (mat.category) {
+			case ArtMaterial.Category.SolidObject:
+				simplePickPalette.Add(mat);
+				break;
+			case ArtMaterial.Category.ParticuleEmitter:
+				simplePickPalette.Add(mat);
+				break;
+			case ArtMaterial.Category.PaintTexture:
+				paintingPalette.Add(mat);
+				break;
+			}
+		}
+	}
+
+	public ArtMaterial GetCurrentSimplePickMaterial(){
+		if (cursorSimplePickPalette == -1)
+			return null;
+		else
+			return simplePickPalette [cursorSimplePickPalette];
+	}
+	
+	public ArtMaterial GetCurrentPaintingMaterial(){
+		if (cursorPaintingPalette == -1)
+			return null;
+		else
+			return paintingPalette [cursorPaintingPalette];
 	}
 
 }

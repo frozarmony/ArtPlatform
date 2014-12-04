@@ -35,40 +35,42 @@ public class SimplePickTracker : GestureTracker {
 	 ******************/
 	
 	public override void OnUpdate(){
-		if (!rightHand.IsSynchronized ()) {
-			if(pickedElement != null)
-				Object.Destroy(pickedElement);
-			pickedElement = null;
-			meetedConditionCount = 0;
-		}
-		else{
-			if (pickedElement == null) {
-				if(rightHand.PickingCoef() < PICK_COEF){
-					if(meetedConditionCount < CONDITION_COUNT){
-						++meetedConditionCount;
-					}
-					else{
-						pickedElement = (GameObject)Object.Instantiate(manager.matTest);
-						UpdatePickedElement();
-						meetedConditionCount = 0;
-					}
-				}
+		ArtMaterial mat = manager.GetCurrentSimplePickMaterial ();
+		if( mat != null)
+			if (!rightHand.IsSynchronized ()) {
+				if(pickedElement != null)
+					Object.Destroy(pickedElement);
+				pickedElement = null;
+				meetedConditionCount = 0;
 			}
 			else{
-				UpdatePickedElement();
-				if(rightHand.PickingCoef() > DROP_COEF){
-					if(meetedConditionCount < CONDITION_COUNT){
-						++meetedConditionCount;
+				if (pickedElement == null) {
+					if(rightHand.PickingCoef() < PICK_COEF){
+						if(meetedConditionCount < CONDITION_COUNT){
+							++meetedConditionCount;
+						}
+						else{
+							pickedElement = (GameObject)Object.Instantiate(mat.gameObject);
+							UpdatePickedElement();
+							meetedConditionCount = 0;
+						}
 					}
-					else{
-						manager.DoAction(new SimplePickAction(manager, manager.matTest, pickedElement.transform.position));
-						Object.Destroy(pickedElement);
-						pickedElement = null;
-						meetedConditionCount = 0;
+				}
+				else{
+					UpdatePickedElement();
+					if(rightHand.PickingCoef() > DROP_COEF){
+						if(meetedConditionCount < CONDITION_COUNT){
+							++meetedConditionCount;
+						}
+						else{
+							manager.DoAction(new SimplePickAction(manager, mat, pickedElement.transform.position));
+							Object.Destroy(pickedElement);
+							pickedElement = null;
+							meetedConditionCount = 0;
+						}
 					}
 				}
 			}
-		}
 	}
 
 	/******************

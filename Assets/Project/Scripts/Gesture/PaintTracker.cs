@@ -35,40 +35,43 @@ public class PaintTracker : GestureTracker {
 	 ******************/
 	
 	public override void OnUpdate(){
-		if (!controlHand.IsSynchronized () || !paintHand.IsSynchronized()) {	// Handle Reset On Hand Desynchronisation
-			if(paintTrace != null && paintTrace.IsDrawing())
-				paintTrace.CancelDrawing();
-			paintTrace = null;
-			meetedConditionCount = 0;
-		}
-		else{
-			if (paintTrace == null) {											// Handle Start of Gesture
-				if(controlHand.OpeningCoef() < TRESHOLD_COEF){
-					if(meetedConditionCount < CONDITION_COUNT){
-						++meetedConditionCount;
-					}
-					else{
-						paintTrace = new PaintAction(manager, manager.matTest);
-						paintTrace.StartDrawing();
-						meetedConditionCount = 0;
+		ArtPaintingMaterial mat = (ArtPaintingMaterial)manager.GetCurrentPaintingMaterial ();
+		if( mat != null)
+			if (!controlHand.IsSynchronized () || !paintHand.IsSynchronized()) {	// Handle Reset On Hand Desynchronisation
+				if(paintTrace != null && paintTrace.IsDrawing())
+					paintTrace.CancelDrawing();
+				paintTrace = null;
+				meetedConditionCount = 0;
+			}
+			else{
+				if (paintTrace == null) {											// Handle Start of Gesture
+					if(controlHand.OpeningCoef() < TRESHOLD_COEF){
+						if(meetedConditionCount < CONDITION_COUNT){
+							++meetedConditionCount;
+						}
+						else{
+							paintTrace = new PaintAction(manager, mat);
+							paintTrace.StartDrawing();
+							meetedConditionCount = 0;
+						}
 					}
 				}
-			}
-			else{																// Handle Drawing
-				paintTrace.Draw(paintHand.GetAnchor(HandManager.HAND_ANCHOR_INDEX).position);
+				else{																// Handle Drawing
+					paintTrace.Draw(paintHand.GetAnchor(HandManager.HAND_ANCHOR_INDEX).position);
 
-				if(controlHand.OpeningCoef() > TRESHOLD_COEF){					// Handle End of Gesture
-					if(meetedConditionCount < CONDITION_COUNT){
-						++meetedConditionCount;
-					}
-					else{
-						manager.DoAction(paintTrace);
-						paintTrace.EndDrawing();
-						paintTrace = null;
-						meetedConditionCount = 0;
+					if(controlHand.OpeningCoef() > TRESHOLD_COEF){					// Handle End of Gesture
+						if(meetedConditionCount < CONDITION_COUNT){
+							++meetedConditionCount;
+						}
+						else{
+							manager.DoAction(paintTrace);
+							paintTrace.EndDrawing();
+							paintTrace = null;
+							meetedConditionCount = 0;
+						}
 					}
 				}
 			}
-		}
 	}
+
 }

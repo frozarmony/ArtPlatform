@@ -27,7 +27,8 @@ public class PaintAction : AbstractAction {
 	 *  References  *
 	 ****************/
 	
-	private GameObject matPrefab;
+	private GameObject painterPrefab;
+	private ArtPaintingMaterial mat;
 	private bool isDrawing;
 	private List<PaintPoint> listOfPoints;
 	
@@ -35,10 +36,14 @@ public class PaintAction : AbstractAction {
 	 *  Constructor   *
 	 ******************/
 	
-	public PaintAction(MainManager manager, GameObject matPrefabRef) : base(manager){
-		matPrefab = matPrefabRef;
+	public PaintAction(MainManager manager, ArtPaintingMaterial matRef) : base(manager){
+		mat = matRef;
 		isDrawing = false;
 		listOfPoints = new List<PaintPoint> ();
+		painterPrefab = manager.painterPrefab;
+		Debug.Log (mat.category);
+		ParticleRenderer particleRenderer = (ParticleRenderer) painterPrefab.renderer;
+		particleRenderer.material = mat.material;
 	}
 	
 	/******************
@@ -99,7 +104,7 @@ public class PaintAction : AbstractAction {
 		if (point.instance != null)
 			Debug.LogError ("Impossible to draw PaintPoint : it's already drawn.");
 		else {
-			point.instance = manager.PaintOnCanvas (matPrefab, point.pos, Quaternion.identity);
+			point.instance = manager.PaintOnCanvas (painterPrefab, point.pos, Quaternion.identity);
 		}
 	}
 	

@@ -37,6 +37,6 @@ public class PaintMenu : HandMenu {
 		else if (hanchorId == matButtonId)
 			manager.LoadMenu ("MatMenu");
 		else if (hanchorId == modButtonId)
-			manager.LoadMenu ("ModMenu");
+			manager.LoadMenu ("ModeMenu");
 	}
 }

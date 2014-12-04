@@ -16,6 +16,7 @@ public class ButtonTrigger : MonoBehaviour {
 
 	private MainManager manager;
 	private int handAnchorId;
+	private bool isSelected;
 	
 	/******************
 	 * Initialization *
@@ -25,6 +26,7 @@ public class ButtonTrigger : MonoBehaviour {
 		// Init References
 		manager = mainManager;
 		handAnchorId = anchorId;
+		isSelected = false;
 
 		// Set Focus Off
 		SetFocus(false);
@@ -51,10 +53,15 @@ public class ButtonTrigger : MonoBehaviour {
 	 *  Tool Methods  *
 	 ******************/
 
-	public void SetFocus(bool focusOn){
+	public void SetSelected(bool selected){
+		isSelected = selected;
+		SetFocus (isSelected);
+	}
+
+	private void SetFocus(bool focusOn){
 		if (focusOn) {
 			this.renderer.material.shader = SHADER_FOCUS_ON;
-		} else {
+		} else if(!isSelected) {
 			this.renderer.material.shader = SHADER_FOCUS_OFF;
 		}
 	}

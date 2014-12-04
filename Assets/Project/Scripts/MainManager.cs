@@ -23,6 +23,8 @@ public class MainManager : MonoBehaviour {
 	public GameObject previousButton;
 	public GameObject matMenuButton;
 	public GameObject modMenuButton;
+	public GameObject pickingButton;
+	public GameObject paintingButton;
 	
 	/*************************
 	 *    Canvas's Prefab    *
@@ -60,8 +62,8 @@ public class MainManager : MonoBehaviour {
 	// Paint's Reference
 	private GameObject currentCanvas;
 	private PaintMode currentPaintMode;
-	private Queue<AbstractAction> doneAction;
-	private Queue<AbstractAction> undoneAction;
+	private Stack<AbstractAction> doneAction;
+	private Stack<AbstractAction> undoneAction;
 
 	// Palette's References
 	private List<ArtMaterial> simplePickPalette;
@@ -87,8 +89,8 @@ public class MainManager : MonoBehaviour {
 		
 		// Init Paint's References
 		currentCanvas = null;
-		doneAction = new Queue<AbstractAction> ();
-		undoneAction = new Queue<AbstractAction> ();
+		doneAction = new Stack<AbstractAction> ();
+		undoneAction = new Stack<AbstractAction> ();
 	}
 
 	public void Start(){
@@ -113,6 +115,7 @@ public class MainManager : MonoBehaviour {
 		currentMenu = null;
 		menusIndex ["ClosedMenu"] = new ClosedMenu (this);
 		menusIndex ["PaintMenu"] = new PaintMenu (this);
+		menusIndex ["ModeMenu"] = new ModeMenu (this);
 	}
 
 	private void InitContextsOfGesture(){
@@ -163,6 +166,14 @@ public class MainManager : MonoBehaviour {
 	/****************
 	 * Menu Methods *
 	 ****************/
+	
+	public PaintMode GetPaintMode(){
+		return currentPaintMode;
+	}
+	
+	public void SetPaintMode(PaintMode paintMode){
+		currentPaintMode = paintMode;
+	}
 
 	public void LoadMenu(string menuName){
 		if (!menusIndex.ContainsKey (menuName)) {
@@ -213,6 +224,16 @@ public class MainManager : MonoBehaviour {
 			for (int i=0; i<anchor.childCount; ++i) {
 				Object.Destroy (anchor.GetChild (i).gameObject);
 			}
+		}
+	}
+
+	public void SelectButton(int handAnchorId, bool selected){
+		if (leftHand.IsSynchronized()) {
+			// Get Anchor
+			Transform anchor = leftHand.GetAnchor(handAnchorId);
+
+			// Select or Deselect Button
+			anchor.GetComponentInChildren<ButtonTrigger>().SetSelected(selected);
 		}
 	}
 	
@@ -289,23 +310,23 @@ public class MainManager : MonoBehaviour {
 
 	public void DoAction(AbstractAction action){
 		action.Do ();
-		doneAction.Enqueue (action);
+		doneAction.Push (action);
 		undoneAction.Clear ();
 	}
 
 	public void UndoAction(){
 		if (doneAction.Count != 0) {
-			AbstractAction action = doneAction.Dequeue();
+			AbstractAction action = doneAction.Pop();
 			action.Undo();
-			undoneAction.Enqueue(action);
+			undoneAction.Push(action);
 		}
 	}
 	
 	public void RedoAction(){
 		if (undoneAction.Count != 0) {
-			AbstractAction action = undoneAction.Dequeue();
+			AbstractAction action = undoneAction.Pop();
 			action.Do ();
-			doneAction.Enqueue(action);
+			doneAction.Push(action);
 		}
 	}
 	

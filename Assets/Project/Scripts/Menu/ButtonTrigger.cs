@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ButtonTrigger : MonoBehaviour {
+public abstract class ButtonTrigger : MonoBehaviour {
 	
 	/****************
 	 *   Constants  *
 	 ****************/
 
-	private static Shader SHADER_FOCUS_OFF	= Shader.Find("Diffuse");
-	private static Shader SHADER_FOCUS_ON	= Shader.Find("Self-Illumin/Diffuse");
+	public static Color COLOR_FOCUS_OFF		= Color.white;
+	public static Color COLOR_FOCUS_ON		= new Color(100,255,255);
 
 	/****************
 	 *  References  *
 	 ****************/
 
-	private MainManager manager;
-	private int handAnchorId;
-	private bool isSelected;
+	protected MainManager manager;
+	protected int handAnchorId;
+	protected bool isSelected;
 	
 	/******************
 	 * Initialization *
@@ -30,6 +30,14 @@ public class ButtonTrigger : MonoBehaviour {
 
 		// Set Focus Off
 		SetFocus(false);
+	}
+	
+	/******************
+	 *    Getters     *
+	 ******************/
+
+	public int GetHandHanchorId(){
+		return handAnchorId;
 	}
 	
 	/******************
@@ -50,20 +58,10 @@ public class ButtonTrigger : MonoBehaviour {
 	}
 	
 	/******************
-	 *  Tool Methods  *
+	 *  Declaration   *
 	 ******************/
 
-	public void SetSelected(bool selected){
-		isSelected = selected;
-		SetFocus (isSelected);
-	}
-
-	private void SetFocus(bool focusOn){
-		if (focusOn) {
-			this.renderer.material.shader = SHADER_FOCUS_ON;
-		} else if(!isSelected) {
-			this.renderer.material.shader = SHADER_FOCUS_OFF;
-		}
-	}
+	public abstract void SetSelected (bool selected);
+	protected abstract void SetFocus (bool focusOn);
 
 }

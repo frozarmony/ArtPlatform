@@ -25,6 +25,7 @@ public class MainManager : MonoBehaviour {
 	public GameObject modMenuButton;
 	public GameObject pickingButton;
 	public GameObject paintingButton;
+	public GameObject choiceButton;
 	
 	/*************************
 	 *    Canvas's Prefab    *
@@ -187,30 +188,30 @@ public class MainManager : MonoBehaviour {
 
 			// Load Menu
 			currentMenu = menusIndex[menuName];
-			currentMenu.OnLoad();
+			if(leftHand.IsSynchronized())
+				currentMenu.OnLoad();
 
 			// Set Corresponding Context of Gesture
 			SetContextOfGesture(currentMenu.GetContextOfGesture());
 		}
 	}
 
-	public void LoadHandButton(int handAnchorId, GameObject buttonPrefab){
+	public void LoadHandButton(ButtonTrigger button){
+		LoadHandButton(button, Vector3.zero);
+	}
+
+	public void LoadHandButton(ButtonTrigger button, Vector3 rotation){
 		if (leftHand.IsSynchronized()){
-			if (buttonPrefab == null) {
-				Debug.LogError ("ButtonPrefab reference is null for anchor : " + handAnchorId );
+			if (button == null) {
+				Debug.LogError ("ButtonPrefab reference is null");
 			}
 			else {
-				// Create Hand Button in Hand Anchor
-				GameObject tmp = (GameObject)Object.Instantiate (buttonPrefab);
-				Transform anchor = leftHand.GetAnchor(handAnchorId);
-				tmp.transform.localRotation = anchor.rotation;
-				tmp.transform.Rotate(leftHand.GetButtonRotation(handAnchorId));
-				tmp.transform.parent = anchor;
-				tmp.transform.localPosition = Vector3.zero;
-			
-				// Create and Add ButtonTrigger script
-				ButtonTrigger trig = tmp.AddComponent<ButtonTrigger> ();
-				trig.InitButtonTrigger (this, handAnchorId);
+				// Load Hand Button in Hand Anchor
+				Transform anchor = leftHand.GetAnchor(button.GetHandHanchorId());
+				button.transform.localRotation = anchor.rotation;
+				button.transform.Rotate(rotation);
+				button.transform.parent = anchor;
+				button.transform.localPosition = Vector3.zero;
 			}
 		}
 	}

@@ -36,7 +36,6 @@ public class HandManager {
 	// Hand's Anchor References
 	private bool isSynchronized;
 	private Transform[] handAnchors;
-	private Vector3[] buttonRotations;
 	
 	/****************
 	 * Constructor  *
@@ -47,17 +46,6 @@ public class HandManager {
 		manager = mng;
 		isSynchronized = false;
 		handAnchors = new Transform[HAND_ANCHOR_COUNT];
-
-		// Init Button's Rotations
-		buttonRotations = new Vector3[HAND_ANCHOR_COUNT];
-		buttonRotations[HAND_ANCHOR_PALM]			= new Vector3(90,0,0);
-		buttonRotations[HAND_ANCHOR_THUMB_BASE]		= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_THUMB_MIDDLE]	= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_THUMB]			= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_INDEX]			= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_MIDDLE]			= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_RING]			= new Vector3(-90,0,0);
-		buttonRotations[HAND_ANCHOR_PINKY]			= new Vector3(-90,0,0);
 	}
 	
 	/****************
@@ -76,17 +64,6 @@ public class HandManager {
 		else {
 			return handAnchors[handAnchorId];
 
-		}
-	}
-	
-	public Vector3 GetButtonRotation(int handAnchorId){
-		if (handAnchorId < 0 || handAnchorId >= HAND_ANCHOR_COUNT) {
-			Debug.LogError ("HandAnchorId does not exist!");
-			return Vector3.zero;
-		}
-		else {
-			return buttonRotations[handAnchorId];
-			
 		}
 	}
 	

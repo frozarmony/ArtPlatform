@@ -26,9 +26,9 @@ public class PaintMenu : HandMenu {
 	 ******************/
 	
 	public override void OnLoad(){
-		manager.LoadHandButton (closeButtonId, manager.closeButton);
-		manager.LoadHandButton (matButtonId, manager.matMenuButton);
-		manager.LoadHandButton (modButtonId, manager.modMenuButton);
+		manager.LoadHandButton (CreateStandardButton(manager.closeButton, manager, closeButtonId));
+		manager.LoadHandButton (CreateStandardButton(manager.matMenuButton, manager, matButtonId));
+		manager.LoadHandButton (CreateStandardButton(manager.modMenuButton, manager, modButtonId));
 	}
 	
 	public override void OnTouch(int hanchorId){

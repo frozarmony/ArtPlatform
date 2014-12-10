@@ -26,9 +26,9 @@ public class ClosedMenu : HandMenu {
 	 ******************/
 
 	public override void OnLoad(){
-		manager.LoadHandButton (openButtonId, manager.openButton);
-		manager.LoadHandButton (undoButtonId, manager.previousButton);
-		manager.LoadHandButton (redoButtonId, manager.nextButton);
+		manager.LoadHandButton (CreateStandardButton(manager.openButton, manager, openButtonId));
+		manager.LoadHandButton (CreateStandardButton(manager.previousButton, manager, undoButtonId));
+		manager.LoadHandButton (CreateStandardButton(manager.nextButton, manager, redoButtonId), new Vector3(0,0,90));
 	}
 
 	public override void OnTouch(int hanchorId){

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class ButtonTrigger : MonoBehaviour {
+public abstract class ButtonItem : HandItem {
 	
 	/****************
 	 *   Constants  *
@@ -14,30 +14,20 @@ public abstract class ButtonTrigger : MonoBehaviour {
 	 *  References  *
 	 ****************/
 
-	protected MainManager manager;
-	protected int handAnchorId;
 	protected bool isSelected;
 	
 	/******************
 	 * Initialization *
 	 ******************/
 
-	public void InitButtonTrigger(MainManager mainManager, int anchorId){
+	public override void InitHandItem(MainManager mainManager, int anchorId){
+		base.InitHandItem (mainManager, anchorId);
+
 		// Init References
-		manager = mainManager;
-		handAnchorId = anchorId;
 		isSelected = false;
 
 		// Set Focus Off
 		SetFocus(false);
-	}
-	
-	/******************
-	 *    Getters     *
-	 ******************/
-
-	public int GetHandHanchorId(){
-		return handAnchorId;
 	}
 	
 	/******************
@@ -63,5 +53,8 @@ public abstract class ButtonTrigger : MonoBehaviour {
 
 	public abstract void SetSelected (bool selected);
 	protected abstract void SetFocus (bool focusOn);
+
+	protected override void OnLoaded(){}
+	protected override void OnUnloaded(){}
 
 }

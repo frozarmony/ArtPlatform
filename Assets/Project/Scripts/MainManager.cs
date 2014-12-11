@@ -52,6 +52,7 @@ public class MainManager : MonoBehaviour {
 	// Menu's Reference
 	private HandMenu currentMenu;
 	private Dictionary<string, HandMenu> menusIndex;
+	private int handItemToBeUnloadedCounter;
 
 	// Context of Gesture's Reference
 	private ContextOfGesture currentContext;
@@ -83,6 +84,7 @@ public class MainManager : MonoBehaviour {
 		
 		// Init Menu's References
 		menusIndex = new Dictionary<string, HandMenu> ();
+		handItemToBeUnloadedCounter = 0;
 
 		// Init Context of Gesture's Reference
 		gestureTrackers = new List<GestureTracker> ();
@@ -181,47 +183,70 @@ public class MainManager : MonoBehaviour {
 		}
 		else {
 			// Unload Current Menu if needed
-			if( currentMenu != null )
-				for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i)
-					UnloadHandButton(i);
+			UnloadMenu();
 
-			// Load Menu
+			// Set Menu to be loaded asynchronously
 			currentMenu = menusIndex[menuName];
-			if(leftHand.IsSynchronized())
-				currentMenu.OnLoad();
-
+			
 			// Set Corresponding Context of Gesture
 			SetContextOfGesture(currentMenu.GetContextOfGesture());
 		}
 	}
 
-	public void LoadHandButton(ButtonTrigger button){
-		LoadHandButton(button, Vector3.zero);
-	}
-
-	public void LoadHandButton(ButtonTrigger button, Vector3 rotation){
-		if (leftHand.IsSynchronized()){
-			if (button == null) {
-				Debug.LogError ("ButtonPrefab reference is null");
-			}
-			else {
-				// Load Hand Button in Hand Anchor
-				Transform anchor = leftHand.GetAnchor(button.GetHandHanchorId());
-				button.transform.localRotation = anchor.rotation;
-				button.transform.Rotate(rotation);
-				button.transform.parent = anchor;
-				button.transform.localPosition = Vector3.zero;
+	public void UnloadMenu(){
+		if( currentMenu != null && leftHand.IsSynchronized() ){
+			handItemToBeUnloadedCounter = 0;
+			for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i){
+				foreach(HandItem item in leftHand.GetAnchor(i).GetComponentsInChildren<HandItem>()){
+					item.StartUnloading();
+					++handItemToBeUnloadedCounter;
+				}
 			}
 		}
 	}
 	
-	public void UnloadHandButton(int handAnchorId){
+	public void NotifyHandItemUnloaded(){
+		// Decrement hand item counter & wait 0
+		--handItemToBeUnloadedCounter;
+		if (handItemToBeUnloadedCounter <= 0) {
+			// Unload Current Menu if needed
+			if( currentMenu != null )
+				for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i)
+					UnloadHandItem(i);
+			
+			// Load Menu
+			if(leftHand.IsSynchronized())
+				currentMenu.OnLoad();
+		}
+	}
+
+	public void LoadHandItem(HandItem button){
+		LoadHandItem(button, Vector3.zero);
+	}
+
+	public void LoadHandItem(HandItem item, Vector3 rotation){
+		if (leftHand.IsSynchronized()){
+			if (item == null) {
+				Debug.LogError ("ButtonPrefab reference is null");
+			}
+			else {
+				// Load Hand Item in Hand Anchor
+				Transform anchor = leftHand.GetAnchor(item.GetHandHanchorId());
+				item.transform.localRotation = anchor.rotation;
+				item.transform.Rotate(rotation);
+				item.transform.parent = anchor;
+				item.transform.localPosition = Vector3.zero;
+			}
+		}
+	}
+	
+	public void UnloadHandItem(int handAnchorId){
 		if (leftHand.IsSynchronized()) {
 			// Get Anchor
 			Transform anchor = leftHand.GetAnchor(handAnchorId);
 
 			// If Anchor has a Child, destroy it
-			foreach (ButtonTrigger button in anchor.GetComponentsInChildren<ButtonTrigger>()) {
+			foreach (HandItem button in anchor.GetComponentsInChildren<HandItem>()) {
 				Object.Destroy (button.gameObject);
 			}
 		}
@@ -233,7 +258,7 @@ public class MainManager : MonoBehaviour {
 			Transform anchor = leftHand.GetAnchor(handAnchorId);
 
 			// Select or Deselect Button
-			anchor.GetComponentInChildren<ButtonTrigger>().SetSelected(selected);
+			anchor.GetComponentInChildren<ButtonItem>().SetSelected(selected);
 		}
 	}
 	

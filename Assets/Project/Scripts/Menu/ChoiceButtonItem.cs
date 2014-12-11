@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChoiceButtonTrigger : ButtonTrigger {
+public class ChoiceButtonItem : ButtonItem {
 	
 	/******************
 	 * Implementation *
@@ -9,7 +9,7 @@ public class ChoiceButtonTrigger : ButtonTrigger {
 	
 	public override void SetSelected(bool selected){
 		isSelected = selected;
-		this.GetComponent<Animator>().SetBool("selected", isSelected);
+		this.GetComponent<Animator>().SetBool("Selected", isSelected);
 	}
 	
 	protected override void SetFocus(bool focusOn){

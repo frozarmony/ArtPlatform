@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StandardButtonTrigger : ButtonTrigger {
+public class StandardButtonItem : ButtonItem {
 	
 	/****************
 	 *   Constants  *

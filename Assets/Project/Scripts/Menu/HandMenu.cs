@@ -38,26 +38,36 @@ public abstract class HandMenu {
 	 * Buttons Factory *
 	 *******************/
 
-	protected ButtonTrigger CreateStandardButton(GameObject buttonPrefab, MainManager manager, int handAnchorId){
+	protected StandardButtonItem CreateStandardButton(GameObject buttonPrefab, MainManager manager, int handAnchorId){
 		// Instantiate Button
-		GameObject standardButton = (GameObject) Object.Instantiate (buttonPrefab);
+		GameObject buttonObject = (GameObject) Object.Instantiate (buttonPrefab);
 		
-		// Create and Add ButtonTrigger script
-		ButtonTrigger trig = standardButton.AddComponent<StandardButtonTrigger> ();
-		trig.InitButtonTrigger (manager, handAnchorId);
+		// Create, Add & Init StandardButtonItem script
+		StandardButtonItem standardButton = buttonObject.AddComponent<StandardButtonItem> ();
+		standardButton.InitHandItem (manager, handAnchorId);
 
-		return trig;
+		// If Exist Synchronized HandItem with HandItemInterface
+		HandItemInterface interf = buttonObject.GetComponent<HandItemInterface> ();
+		if(interf != null)
+			interf.Init(standardButton);
+
+		return standardButton;
 	}
 	
-	protected ButtonTrigger CreateChoiceButton(MainManager manager, int handAnchorId){
+	protected ChoiceButtonItem CreateChoiceButton(MainManager manager, int handAnchorId){
 		// Instantiate Button
-		GameObject choiceButton = (GameObject) Object.Instantiate (manager.choiceButton);
+		GameObject buttonObject = (GameObject) Object.Instantiate (manager.choiceButton);
 		
-		// Create and Add ButtonTrigger script
-		ChoiceButtonTrigger trig = choiceButton.AddComponent<ChoiceButtonTrigger> ();
-		trig.InitButtonTrigger (manager, handAnchorId);
+		// Create, Add & Init ChoiceButtonItem script
+		ChoiceButtonItem choiceButton = buttonObject.AddComponent<ChoiceButtonItem> ();
+		choiceButton.InitHandItem (manager, handAnchorId);
 		
-		return trig;
+		// If Exist Synchronized HandItem with HandItemInterface
+		HandItemInterface interf = buttonObject.GetComponent<HandItemInterface> ();
+		if(interf != null)
+			interf.Init(choiceButton);
+		
+		return choiceButton;
 	}
 
 }

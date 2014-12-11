@@ -28,10 +28,10 @@ public class ModeMenu : HandMenu {
 	 ******************/
 	
 	public override void OnLoad(){
-		manager.LoadHandButton (CreateStandardButton(manager.closeButton, manager, closeButtonId));
-		manager.LoadHandButton (CreateStandardButton(manager.returnButton, manager, returnButtonId));
-		manager.LoadHandButton (CreateChoiceButton(manager, pickingButtonId));
-		manager.LoadHandButton (CreateChoiceButton(manager, paintingButtonId));
+		manager.LoadHandItem (CreateStandardButton(manager.closeButton, manager, closeButtonId));
+		manager.LoadHandItem (CreateStandardButton(manager.returnButton, manager, returnButtonId));
+		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId));
+		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId));
 
 		SelectCurrentMode ();
 	}

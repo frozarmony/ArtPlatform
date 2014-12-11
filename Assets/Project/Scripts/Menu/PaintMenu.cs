@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class PaintMenu : HandMenu {
@@ -26,9 +26,9 @@ public class PaintMenu : HandMenu {
 	 ******************/
 	
 	public override void OnLoad(){
-		manager.LoadHandButton (CreateStandardButton(manager.closeButton, manager, closeButtonId));
-		manager.LoadHandButton (CreateStandardButton(manager.matMenuButton, manager, matButtonId));
-		manager.LoadHandButton (CreateStandardButton(manager.modMenuButton, manager, modButtonId));
+		manager.LoadHandItem (CreateStandardButton(manager.closeButton, manager, closeButtonId));
+		manager.LoadHandItem (CreateStandardButton(manager.matMenuButton, manager, matButtonId));
+		manager.LoadHandItem (CreateStandardButton(manager.modMenuButton, manager, modButtonId));
 	}
 	
 	public override void OnTouch(int hanchorId){

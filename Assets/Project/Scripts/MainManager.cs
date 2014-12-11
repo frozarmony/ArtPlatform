@@ -19,8 +19,7 @@ public class MainManager : MonoBehaviour {
 	public GameObject openButton;
 	public GameObject closeButton;
 	public GameObject returnButton;
-	public GameObject nextButton;
-	public GameObject previousButton;
+	public GameObject arrowButton;
 	public GameObject matMenuButton;
 	public GameObject modMenuButton;
 	public GameObject pickingButton;
@@ -222,8 +221,8 @@ public class MainManager : MonoBehaviour {
 			Transform anchor = leftHand.GetAnchor(handAnchorId);
 
 			// If Anchor has a Child, destroy it
-			for (int i=0; i<anchor.childCount; ++i) {
-				Object.Destroy (anchor.GetChild (i).gameObject);
+			foreach (ButtonTrigger button in anchor.GetComponentsInChildren<ButtonTrigger>()) {
+				Object.Destroy (button.gameObject);
 			}
 		}
 	}

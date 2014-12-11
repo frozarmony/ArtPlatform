@@ -123,9 +123,9 @@ public class HandController : MonoBehaviour {
 		IgnoreCollisionsWithChildren(hand_model.gameObject);
 
 		// Synchronisation with MainManager
-		if(model == leftPhysicsModel)
+		if(model == leftGraphicsModel)
 			mainManager.SyncLeftHand (hand_model);
-		if(model == rightPhysicsModel)
+		if(model == rightGraphicsModel)
 			mainManager.SyncRightHand (hand_model);
 
 		return hand_model;
@@ -194,10 +194,10 @@ public class HandController : MonoBehaviour {
 	// Destroy Hand
 	private void DestroyHand(HandModel hand_model) {
 		// Synchronisation with MainManager
-		if(hand_model.name.StartsWith("RigidLeft"))
-			mainManager.SyncLeftHand (null);
-		if(hand_model.name.StartsWith("RigidRight"))
-			mainManager.SyncRightHand (null);
+		if(hand_model.name.StartsWith("HandMenu"))
+			mainManager.SyncLeftHand (hand_model);
+		if(hand_model.name.StartsWith("HandPainter"))
+			mainManager.SyncRightHand (hand_model);
 
 		if (destroyHands)
 			Destroy(hand_model.gameObject);

@@ -25,6 +25,9 @@ public class HandManager {
 	// Opening Coeficient
 	public static float OPENING_RANGE_COEF		= 7.4f;
 	public static float OPENING_OFFSET_COEF		= 3.6f;
+
+	// Desynchronized Id
+	private static int DESYNCHRONIZED_ID		= -1;
 	
 	/****************
 	 *  References  *
@@ -33,8 +36,10 @@ public class HandManager {
 	// MainManager
 	private MainManager manager;
 
+	// Leap HandModel Instance Id
+	private int instanceId;
+
 	// Hand's Anchor References
-	private bool isSynchronized;
 	private Transform[] handAnchors;
 	
 	/****************
@@ -44,7 +49,7 @@ public class HandManager {
 	public HandManager(MainManager mng){
 		// Init References
 		manager = mng;
-		isSynchronized = false;
+		instanceId = DESYNCHRONIZED_ID;
 		handAnchors = new Transform[HAND_ANCHOR_COUNT];
 	}
 	
@@ -53,7 +58,7 @@ public class HandManager {
 	 ****************/
 
 	public bool IsSynchronized(){
-		return isSynchronized;
+		return instanceId != DESYNCHRONIZED_ID;
 	}
 
 	public Transform GetAnchor(int handAnchorId){
@@ -72,17 +77,10 @@ public class HandManager {
 	 ****************/
 	
 	public void SyncHand(HandModel model){
-		if (model == null) {
-			// Hand is not selected
-			isSynchronized = false;
-			
-			// Sync Hand's Anchors
-			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
-				handAnchors[i] = null;
-		}
-		else {
+		// On Synchronization
+		if (!IsSynchronized()) {
 			// Hand is selected
-			isSynchronized = true;
+			instanceId = model.GetInstanceID();
 			
 			// Sync Hand's Anchors
 			handAnchors[HAND_ANCHOR_PALM]			= model.transform.GetChild(2);
@@ -94,6 +92,16 @@ public class HandManager {
 			handAnchors[HAND_ANCHOR_RING]			= model.transform.GetChild(4).GetChild(2);
 			handAnchors[HAND_ANCHOR_PINKY]			= model.transform.GetChild(3).GetChild(2);
 		}
+		// On Desynchronization
+		else if(instanceId == model.GetInstanceID()){
+			// Hand is not selected
+			instanceId = DESYNCHRONIZED_ID;
+			
+			// Sync Hand's Anchors
+			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
+				handAnchors[i] = null;
+		}
+		 
 	}
 	
 	/*******************

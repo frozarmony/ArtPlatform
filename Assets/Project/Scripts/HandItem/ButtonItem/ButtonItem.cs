@@ -53,6 +53,10 @@ public abstract class ButtonItem : HandItem {
 
 	public abstract void SetSelected (bool selected);
 	protected abstract void SetFocus (bool focusOn);
+	
+	/******************
+	 * Implementation *
+	 ******************/
 
 	protected override void OnLoaded(){}
 	protected override void OnUnloaded(){}

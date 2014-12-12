@@ -25,6 +25,7 @@ public class MainManager : MonoBehaviour {
 	public GameObject pickingButton;
 	public GameObject paintingButton;
 	public GameObject choiceButton;
+	public GameObject materialProjector;
 	
 	/*************************
 	 *    Canvas's Prefab    *
@@ -382,6 +383,24 @@ public class MainManager : MonoBehaviour {
 				paintingPalette.Add(mat);
 				break;
 			}
+		}
+	}
+
+	public void NextMaterial(){
+		if (currentPaintMode == PaintMode.SimplePicking && simplePickPalette.Count > 0) {
+			cursorSimplePickPalette = ++cursorSimplePickPalette % simplePickPalette.Count;
+		}
+		else if (currentPaintMode == PaintMode.Painting && paintingPalette.Count > 0) {
+			cursorPaintingPalette = ++cursorPaintingPalette % paintingPalette.Count;
+		}
+	}
+
+	public void PreviousMaterial(){
+		if (currentPaintMode == PaintMode.SimplePicking && simplePickPalette.Count > 0) {
+			cursorSimplePickPalette = --cursorSimplePickPalette % simplePickPalette.Count;
+		}
+		else if (currentPaintMode == PaintMode.Painting && paintingPalette.Count > 0) {
+			cursorPaintingPalette = --cursorPaintingPalette % paintingPalette.Count;
 		}
 	}
 

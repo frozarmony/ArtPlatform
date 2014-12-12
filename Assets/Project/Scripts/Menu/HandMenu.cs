@@ -70,4 +70,20 @@ public abstract class HandMenu {
 		return choiceButton;
 	}
 
+	protected MaterialProjectorItem CreateMaterialProjectorItem(MainManager manager, int handAnchorId){
+		// Instantiate Button
+		GameObject itemObject = (GameObject) Object.Instantiate (manager.materialProjector);
+		
+		// Create, Add & Init ChoiceButtonItem script
+		MaterialProjectorItem materialProjector = itemObject.AddComponent<MaterialProjectorItem> ();
+		materialProjector.InitHandItem (manager, handAnchorId);
+		
+		// If Exist Synchronized HandItem with HandItemInterface
+		HandItemInterface interf = itemObject.GetComponent<HandItemInterface> ();
+		if(interf != null)
+			interf.Init(materialProjector);
+		
+		return materialProjector;
+	}
+
 }

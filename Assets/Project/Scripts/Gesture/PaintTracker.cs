@@ -18,6 +18,7 @@ public class PaintTracker : GestureTracker {
 	private HandManager paintHand;
 	private int meetedConditionCount;
 	private PaintAction paintTrace;
+	private float lastPointSize;
 	
 	/******************
 	 *  Constructor   *
@@ -28,6 +29,7 @@ public class PaintTracker : GestureTracker {
 		this.paintHand = rightHandRef;
 		this.paintTrace = null;
 		this.meetedConditionCount = 0;
+		this.lastPointSize = 0;
 	}
 	
 	/******************
@@ -44,8 +46,9 @@ public class PaintTracker : GestureTracker {
 				meetedConditionCount = 0;
 			}
 			else{
+				float openingCoef = controlHand.OpeningCoef();
 				if (paintTrace == null) {											// Handle Start of Gesture
-					if(controlHand.OpeningCoef() < TRESHOLD_COEF){
+					if(openingCoef < TRESHOLD_COEF){
 						if(meetedConditionCount < CONDITION_COUNT){
 							++meetedConditionCount;
 						}
@@ -53,11 +56,13 @@ public class PaintTracker : GestureTracker {
 							paintTrace = new PaintAction(manager, mat);
 							paintTrace.StartDrawing();
 							meetedConditionCount = 0;
+							lastPointSize = TRESHOLD_COEF - openingCoef;
 						}
 					}
 				}
 				else{																// Handle Drawing
-					paintTrace.Draw(paintHand.GetAnchor(HandManager.HAND_ANCHOR_INDEX).position);
+					paintTrace.Draw(paintHand.GetAnchor(HandManager.HAND_ANCHOR_INDEX).position, lastPointSize);
+					lastPointSize = TRESHOLD_COEF - openingCoef;
 
 					if(controlHand.OpeningCoef() > TRESHOLD_COEF){					// Handle End of Gesture
 						if(meetedConditionCount < CONDITION_COUNT){

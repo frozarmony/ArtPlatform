@@ -105,7 +105,7 @@ public class PaintMenu : HandMenu {
 		}
 		else if (currentPaintMode == MainManager.PaintMode.Painting) {
 			previewInstance = ((GameObject) Object.Instantiate(manager.painterPrefab)).transform;
-			previewInstance.renderer.material = ((ArtPaintingMaterial)manager.GetCurrentPaintingMaterial()).material;
+			manager.DrawPainter(previewInstance.particleSystem, ((ArtPaintingMaterial) manager.GetCurrentPaintingMaterial()).material, 0.7f, 20.0f, 0.4f);
 		}
 		materialProjector.LoadMaterial (previewInstance);
 	}

@@ -12,6 +12,8 @@ public class MainManager : MonoBehaviour {
 	public enum ContextOfGesture {Undefined, Menu, PaintMode};
 	public enum PaintMode {SimplePicking, Painting};
 
+	private static float PAINTER_DEFAULT_DENSITY;
+
 	/*************************
 	 *    Button's Prefabs   *
 	 *************************/
@@ -330,6 +332,33 @@ public class MainManager : MonoBehaviour {
 		}
 	}
 
+	public bool DrawPainter(ParticleSystem particlePainter, Material material, float size, float density, float granularity){
+		// Compute Particle Count
+		int particleCount = Mathf.FloorToInt(size*size*density/granularity + Random.Range (0f, 1f));
+
+		if(particleCount != 0){
+			// Generate Cloud
+			ParticleSystem.Particle[] particles = new ParticleSystem.Particle[particleCount];
+			for(int i=0; i<particleCount; ++i){
+				particles[i].position = Random.insideUnitSphere * size;
+				particles[i].size = granularity;
+				particles[i].color = new Color(0,90,190);
+				particles[i].rotation = Random.Range(0f,360f);
+			}
+
+			// Load Cloud
+			particlePainter.SetParticles (particles, particleCount);
+
+			// Set Up Renderer
+			particlePainter.renderer.material = material;
+
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
 	/**********************
 	 * Undo/Redo Methods  *
 	 **********************/
@@ -397,10 +426,10 @@ public class MainManager : MonoBehaviour {
 
 	public void PreviousMaterial(){
 		if (currentPaintMode == PaintMode.SimplePicking && simplePickPalette.Count > 0) {
-			cursorSimplePickPalette = --cursorSimplePickPalette % simplePickPalette.Count;
+			cursorSimplePickPalette = (simplePickPalette.Count + cursorSimplePickPalette - 1) % simplePickPalette.Count;
 		}
 		else if (currentPaintMode == PaintMode.Painting && paintingPalette.Count > 0) {
-			cursorPaintingPalette = --cursorPaintingPalette % paintingPalette.Count;
+			cursorPaintingPalette = (paintingPalette.Count + cursorPaintingPalette - 1) % paintingPalette.Count;
 		}
 	}
 

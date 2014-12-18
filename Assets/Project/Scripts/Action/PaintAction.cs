@@ -12,14 +12,18 @@ public class PaintAction : AbstractAction {
 	{
 		// Properties
 		public Vector3 pos;
+		public float size;
 
 		// Reference
 		public GameObject instance;
+		public ParticleSystem.Particle[] particles;
 
 		// Contructor
-		public PaintPoint(Vector3 position){
+		public PaintPoint(Vector3 position, float sizeOfPoint){
 			pos = position;
+			size = sizeOfPoint;
 			instance = null;
+			particles = null;
 		}
 	}
 	
@@ -41,9 +45,6 @@ public class PaintAction : AbstractAction {
 		isDrawing = false;
 		listOfPoints = new List<PaintPoint> ();
 		painterPrefab = manager.painterPrefab;
-		Debug.Log (mat.category);
-		ParticleRenderer particleRenderer = (ParticleRenderer) painterPrefab.renderer;
-		particleRenderer.material = mat.material;
 	}
 	
 	/******************
@@ -58,13 +59,13 @@ public class PaintAction : AbstractAction {
 		return isDrawing;
 	}
 
-	public void Draw(Vector3 paintPos){
+	public void Draw(Vector3 paintPos, float size){
 		if (!isDrawing)
 			Debug.LogError ("Can't draw until StartDrawing method wasn't called.");
 		else {
-			PaintPoint point = new PaintPoint(paintPos);
-			listOfPoints.Add(point);
-			DrawPaintPoint(point);
+			PaintPoint point = new PaintPoint(paintPos, size);
+			if(DrawPaintPoint(point))
+				listOfPoints.Add(point);
 		}
 	}
 
@@ -100,12 +101,28 @@ public class PaintAction : AbstractAction {
 	 *  Tool Methods  *
 	 ******************/
 
-	private void DrawPaintPoint(PaintPoint point){
+	private bool DrawPaintPoint(PaintPoint point){
 		if (point.instance != null)
 			Debug.LogError ("Impossible to draw PaintPoint : it's already drawn.");
 		else {
 			point.instance = manager.PaintOnCanvas (painterPrefab, point.pos, Quaternion.identity);
+
+			if(point.particles == null){
+				if(!manager.DrawPainter(point.instance.particleSystem, mat.material, point.size, 3f, 0.3f)){
+					Object.Destroy(point.instance);
+					point.instance = null;
+					return false;
+				}
+				else{
+					point.instance.particleSystem.GetParticles(point.particles);
+				}
+			}
+			else{
+				point.instance.particleSystem.SetParticles(point.particles, point.particles.Length);
+				point.instance.renderer.material = mat.material;
+			}
 		}
+		return true;
 	}
 	
 	private void ErasePaintPoint(PaintPoint point){

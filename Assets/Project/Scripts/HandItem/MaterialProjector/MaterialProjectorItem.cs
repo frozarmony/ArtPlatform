@@ -8,6 +8,7 @@ public class MaterialProjectorItem  : HandItem {
 	 ****************/
 
 	private Transform sphere;
+	private Transform preview;
 	
 	/******************
 	 * Initialization *
@@ -28,16 +29,31 @@ public class MaterialProjectorItem  : HandItem {
 		// Unload old material
 		sphere.DetachChildren ();
 
+		preview = materialInstance;
+
 		// Load new material
-		materialInstance.localRotation = sphere.rotation;
-		materialInstance.parent = sphere;
-		materialInstance.localPosition = Vector3.zero;
+		if(IsLoaded()){
+			preview.localRotation = sphere.rotation;
+			preview.parent = sphere;
+			preview.localPosition = Vector3.zero;
+		}
+		else
+			preview.localScale = Vector3.zero;
 	}
 	
 	/******************
 	 * Implementation *
 	 ******************/
 	
-	protected override void OnLoaded(){}
+	protected override void OnLoaded(){
+		// Finish Preview Loading if needed
+		if (preview != null) {
+			preview.localScale = Vector3.one;
+			preview.localRotation = sphere.rotation;
+			preview.parent = sphere;
+			preview.localPosition = Vector3.zero;
+		}
+	}
+
 	protected override void OnUnloaded(){}
 }

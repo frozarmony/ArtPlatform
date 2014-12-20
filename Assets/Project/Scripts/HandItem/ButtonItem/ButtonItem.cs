@@ -42,7 +42,11 @@ public abstract class ButtonItem : HandItem {
 
 	void OnTriggerExit(Collider collid){
 		if (collid.tag == "BoneTriggerer") {
+			// Returns Effects
 			SetFocus(false);
+			Object.Instantiate(manager.onTouchExplosionPrefab, this.transform.position, Quaternion.identity);
+
+			// Notify to manager
 			manager.NotifyButtonPush (handAnchorId);
 		}
 	}

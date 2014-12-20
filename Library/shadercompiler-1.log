@@ -1,3 +1,19 @@
-Base path: E:/Users/Frozarmony/Programmes/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-1-8116
+Base path: C:/Program Files (x86)/Unity/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-1-42604
 Cmd: getPlatforms
+Cmd: preprocess
+  insize=464 outsize=464 ok=1
+Cmd: preprocess
+  insize=1101 outsize=904 ok=1
+Cmd: preprocess
+  insize=1406 outsize=457 ok=1
+Cmd: preprocess
+  insize=3269 outsize=1124 ok=1
+Cmd: preprocess
+  insize=1654 outsize=1035 ok=1
+Cmd: preprocess
+  insize=2360 outsize=459 ok=1
+Cmd: preprocess
+  insize=1574 outsize=702 ok=1
+Cmd: preprocess
+  insize=1812 outsize=1056 ok=1

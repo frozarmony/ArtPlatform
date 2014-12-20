@@ -12,8 +12,6 @@ public class MainManager : MonoBehaviour {
 	public enum ContextOfGesture {Undefined, Menu, PaintMode};
 	public enum PaintMode {SimplePicking, Painting};
 
-	private static float PAINTER_DEFAULT_DENSITY;
-
 	/*************************
 	 *    Button's Prefabs   *
 	 *************************/
@@ -30,16 +28,12 @@ public class MainManager : MonoBehaviour {
 	public GameObject materialProjector;
 	
 	/*************************
-	 *    Canvas's Prefab    *
+	 *    General's Prefab    *
 	 *************************/
 	
 	public GameObject canvasPrefab;
-	
-	/*************************
-	 *   Painter's Prefab    *
-	 *************************/
-
 	public GameObject painterPrefab;
+	public GameObject onTouchExplosionPrefab;
 
 	/****************
 	 *  References  *

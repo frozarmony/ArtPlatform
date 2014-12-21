@@ -54,13 +54,14 @@ public abstract class HandMenu {
 		return standardButton;
 	}
 	
-	protected ChoiceButtonItem CreateChoiceButton(MainManager manager, int handAnchorId){
+	protected ChoiceButtonItem CreateChoiceButton(MainManager manager, int handAnchorId, Texture choiceTexture){
 		// Instantiate Button
 		GameObject buttonObject = (GameObject) Object.Instantiate (manager.choiceButton);
 		
 		// Create, Add & Init ChoiceButtonItem script
 		ChoiceButtonItem choiceButton = buttonObject.AddComponent<ChoiceButtonItem> ();
 		choiceButton.InitHandItem (manager, handAnchorId);
+		choiceButton.InitChoiceDisplay (choiceTexture);
 		
 		// If Exist Synchronized HandItem with HandItemInterface
 		HandItemInterface interf = buttonObject.GetComponent<HandItemInterface> ();

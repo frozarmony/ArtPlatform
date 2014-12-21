@@ -48,8 +48,8 @@ public class PaintMenu : HandMenu {
 		manager.LoadHandItem (CreateStandardButton(manager.closeButton, manager, closeButtonId));
 		manager.LoadHandItem (CreateStandardButton(manager.arrowButton, manager, nextMatButtonId), new Vector3(0,0,90));
 		manager.LoadHandItem (CreateStandardButton(manager.arrowButton, manager, previousMatButtonId), new Vector3(0,0,-90));
-		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId));
-		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId));
+		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId, manager.pickingModeTexture));
+		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId, manager.paintingModeTexture));
 
 		// Material Projector
 		materialProjector = CreateMaterialProjectorItem (manager, materialProjectorId);

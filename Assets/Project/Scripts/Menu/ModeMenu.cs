@@ -30,8 +30,8 @@ public class ModeMenu : HandMenu {
 	public override void OnLoad(){
 		manager.LoadHandItem (CreateStandardButton(manager.closeButton, manager, closeButtonId));
 		manager.LoadHandItem (CreateStandardButton(manager.returnButton, manager, returnButtonId));
-		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId));
-		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId));
+		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId, manager.pickingModeTexture));
+		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId, manager.paintingModeTexture));
 
 		SelectCurrentMode ();
 	}

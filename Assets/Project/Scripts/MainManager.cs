@@ -28,6 +28,13 @@ public class MainManager : MonoBehaviour {
 	public GameObject materialProjector;
 	
 	/*************************
+	 *    Mode's Textures    *
+	 *************************/
+
+	public Texture pickingModeTexture;
+	public Texture paintingModeTexture;
+	
+	/*************************
 	 *    General's Prefab    *
 	 *************************/
 	
@@ -139,6 +146,14 @@ public class MainManager : MonoBehaviour {
 		// Update each GestureTracker
 		foreach(GestureTracker tracker in gestureTrackers)
 			tracker.OnUpdate();
+	}
+
+	/********************
+	 * WorkShop Methods *
+	 ********************/
+
+	public Transform GetMainCamera(){
+		return this.transform.FindChild("MainCamera");
 	}
 	
 	/*****************

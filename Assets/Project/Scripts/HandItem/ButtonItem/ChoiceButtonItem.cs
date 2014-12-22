@@ -8,11 +8,16 @@ public class ChoiceButtonItem : ButtonItem {
 	 ******************/
 
 	public void InitChoiceDisplay(Texture choiceTexture){
-		// Init LookAtCamera Script
-		this.gameObject.AddComponent<LookAtCamera> ().targetCamera = manager.GetMainCamera ();
+		// Find ChoiceDisplay Ref
+		Transform choiceDisplay = this.transform.FindChild("ChoiceDisplay");
 
-		// Init Choice Texture
-		this.transform.GetChild (0).renderer.material.mainTexture = choiceTexture;
+		if(choiceDisplay != null){
+			// Init LookAtCamera Script
+			choiceDisplay.gameObject.AddComponent<LookAtCamera> ().targetCamera = manager.GetMainCamera ();
+
+			// Init Choice Texture
+			choiceDisplay.renderer.material.mainTexture = choiceTexture;
+		}
 	}
 	
 	/******************

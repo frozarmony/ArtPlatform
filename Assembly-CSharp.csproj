@@ -110,6 +110,7 @@
      <Compile Include="Assets\Project\Scripts\Interaction\Action\PaintAction.cs" />
      <Compile Include="Assets\Project\Scripts\Interaction\Action\SimplePickAction.cs" />
      <Compile Include="Assets\Project\Scripts\Interaction\Gesture\GestureTracker.cs" />
+     <Compile Include="Assets\Project\Scripts\Interaction\Gesture\MoveTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Interaction\Gesture\PaintTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Interaction\Gesture\SimplePickTracker.cs" />
      <Compile Include="Assets\Project\Scripts\Leap\HandController.cs" />

@@ -9,7 +9,7 @@ public class MainManager : MonoBehaviour {
 	 *       Constants       *
 	 *************************/
 
-	public enum ContextOfGesture {Undefined, Menu, PaintMode};
+	public enum ContextOfGesture {Undefined, Menu, PaintMode, Move};
 	public enum PaintMode {SimplePicking, Painting};
 
 	/*************************
@@ -30,7 +30,8 @@ public class MainManager : MonoBehaviour {
 	/*************************
 	 *    Mode's Textures    *
 	 *************************/
-
+	
+	public Texture movingModeTexture;
 	public Texture pickingModeTexture;
 	public Texture paintingModeTexture;
 	
@@ -63,6 +64,7 @@ public class MainManager : MonoBehaviour {
 	private List<GestureTracker> gestureTrackers;
 	private SimplePickTracker simplePickTracker;
 	private PaintTracker paintTracker;
+	private MoveTracker moveTracker;
 
 	// Paint's Reference
 	private GameObject currentCanvas;
@@ -128,6 +130,7 @@ public class MainManager : MonoBehaviour {
 		currentContext = ContextOfGesture.Undefined;
 		simplePickTracker = new SimplePickTracker (this, rightHand);
 		paintTracker = new PaintTracker (this, leftHand, rightHand);
+		moveTracker = new MoveTracker (this, leftHand, rightHand);
 	}
 
 	/****************
@@ -175,6 +178,67 @@ public class MainManager : MonoBehaviour {
 	
 	public void SyncRightHand(HandModel model){
 		rightHand.SyncHand (model);
+	}
+	
+	/******************************
+	 * Context of Gesture Methods *
+	 ******************************/
+
+	public ContextOfGesture GetContextOfGesture(){
+		return currentContext;
+	}
+
+	public void SetContextOfGesture(ContextOfGesture newContext){
+		if (currentContext != newContext) {
+			// Unload Old Context
+			foreach(GestureTracker tracker in gestureTrackers)
+				tracker.OnUnload();
+			gestureTrackers.Clear();
+			
+			// Load New Context
+			switch(newContext)
+			{
+				
+				// Menu Context
+			case ContextOfGesture.Menu:
+				// Do Nothing
+				break;
+				
+				// PaintMode Context
+			case ContextOfGesture.PaintMode:
+				
+				// Select correct PaintMode Tracker
+				switch(currentPaintMode)
+				{
+					// Simple Picking
+				case PaintMode.SimplePicking:
+					gestureTrackers.Add(simplePickTracker);
+					break;
+					
+					// Painting
+				case PaintMode.Painting:
+					gestureTrackers.Add(paintTracker);
+					break;
+				}
+				break;
+				
+				// Move Context
+			case ContextOfGesture.Move:
+				gestureTrackers.Add (moveTracker);
+				break;
+				
+			default:
+				// Do Nothing
+				break;
+			}
+			
+			// Load New Context
+			foreach(GestureTracker tracker in gestureTrackers)
+				tracker.OnLoad();
+
+			// Update Context
+			currentContext = newContext;
+		}
 	}
 
 	/****************
@@ -270,54 +334,35 @@ public class MainManager : MonoBehaviour {
 			Transform anchor = leftHand.GetAnchor(handAnchorId);
 
 			// Select or Deselect Button
-			anchor.GetComponentInChildren<ButtonItem>().SetSelected(selected);
+			ButtonItem button = anchor.GetComponentInChildren<ButtonItem>();
+			if(button != null)
+				button.SetSelected(selected);
 		}
 	}
 	
-	/******************************
-	 * Context of Gesture Methods *
-	 ******************************/
-
-	public void SetContextOfGesture(ContextOfGesture newContext){
-		if (currentContext != newContext) {
-			// Unload Old Context
-			foreach(GestureTracker tracker in gestureTrackers)
-				tracker.OnUnload();
-			gestureTrackers.Clear();
-
-			// Load New Context
-			switch(newContext)
-			{
-
-			// Menu Context
-			case ContextOfGesture.Menu:
-				// Do Nothing
-				break;
-
-			// PaintMode
-			case ContextOfGesture.PaintMode:
-
-				// Select correct PaintMode Tracker
-				switch(currentPaintMode)
-				{
-				// Simple Picking
-				case PaintMode.SimplePicking:
-					gestureTrackers.Add(simplePickTracker);
-					break;
-					
-				// Painting
-				case PaintMode.Painting:
-					gestureTrackers.Add(paintTracker);
-					break;
-				}
-				break;
-
-			default:
-				// Do Nothing
-				break;
-			}
-			foreach(GestureTracker tracker in gestureTrackers)
-				tracker.OnLoad();
+	/**********************
+	 * Undo/Redo Methods  *
+	 **********************/
+	
+	public void DoAction(AbstractAction action){
+		action.Do ();
+		doneAction.Push (action);
+		undoneAction.Clear ();
+	}
+	
+	public void UndoAction(){
+		if (doneAction.Count != 0) {
+			AbstractAction action = doneAction.Pop();
+			action.Undo();
+			undoneAction.Push(action);
+		}
+	}
+	
+	public void RedoAction(){
+		if (undoneAction.Count != 0) {
+			AbstractAction action = undoneAction.Pop();
+			action.Do ();
+			doneAction.Push(action);
 		}
 	}
 	
@@ -327,6 +372,10 @@ public class MainManager : MonoBehaviour {
 
 	public void CreateNewCanvas(){
 		currentCanvas = (GameObject)Instantiate (canvasPrefab, Vector3.zero, Quaternion.identity);
+	}
+
+	public Transform GetCurrentCanvas(){
+		return currentCanvas.transform;
 	}
 
 	public GameObject PaintOnCanvas(GameObject matPrefab, Vector3 pos, Quaternion rotation){
@@ -365,32 +414,6 @@ public class MainManager : MonoBehaviour {
 		}
 		else{
 			return false;
-		}
-	}
-
-	/**********************
-	 * Undo/Redo Methods  *
-	 **********************/
-
-	public void DoAction(AbstractAction action){
-		action.Do ();
-		doneAction.Push (action);
-		undoneAction.Clear ();
-	}
-
-	public void UndoAction(){
-		if (doneAction.Count != 0) {
-			AbstractAction action = doneAction.Pop();
-			action.Undo();
-			undoneAction.Push(action);
-		}
-	}
-	
-	public void RedoAction(){
-		if (undoneAction.Count != 0) {
-			AbstractAction action = undoneAction.Pop();
-			action.Do ();
-			doneAction.Push(action);
 		}
 	}
 	

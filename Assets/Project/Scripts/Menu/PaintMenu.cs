@@ -28,7 +28,7 @@ public class PaintMenu : HandMenu {
 	
 	public PaintMenu(MainManager manager) : base(manager, MainManager.ContextOfGesture.Menu){
 		// Buttons
-		closeButtonId = HandManager.HAND_ANCHOR_THUMB;
+		closeButtonId = HandManager.HAND_ANCHOR_PALM;
 		previousMatButtonId = HandManager.HAND_ANCHOR_THUMB_BASE;
 		nextMatButtonId = HandManager.HAND_ANCHOR_THUMB_MIDDLE;
 		pickingButtonId = HandManager.HAND_ANCHOR_INDEX;

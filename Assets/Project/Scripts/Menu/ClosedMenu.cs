@@ -41,6 +41,7 @@ public class ClosedMenu : HandMenu {
 		// Move Mode
 		moveButton = CreateChoiceButton (manager, moveButtonId, manager.movingModeTexture);
 		manager.LoadHandItem (moveButton, new Vector3(90,0,0));
+		moveButton.SetSelected (manager.GetContextOfGesture() == MainManager.ContextOfGesture.Move);
 	}
 
 	public override void OnTouch(int hanchorId){

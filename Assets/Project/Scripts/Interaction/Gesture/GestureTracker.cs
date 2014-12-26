@@ -22,8 +22,8 @@ public abstract class GestureTracker {
 	 *  Declaration   *
 	 ******************/
 	
-	public void OnLoad (){}
+	public virtual void OnLoad (){}
 	public abstract void OnUpdate ();
-	public void OnUnload (){}
+	public virtual void OnUnload (){}
 	
 }

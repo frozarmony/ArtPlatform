@@ -76,7 +76,7 @@ public class HandManager {
 	 * Sync Methods *
 	 ****************/
 	
-	public void SyncHand(HandModel model){
+	public bool SyncHand(HandModel model){
 		// On Synchronization
 		if (!IsSynchronized()) {
 			// Hand is selected
@@ -91,6 +91,9 @@ public class HandManager {
 			handAnchors[HAND_ANCHOR_MIDDLE]			= model.transform.GetChild(1).GetChild(2);
 			handAnchors[HAND_ANCHOR_RING]			= model.transform.GetChild(4).GetChild(2);
 			handAnchors[HAND_ANCHOR_PINKY]			= model.transform.GetChild(3).GetChild(2);
+
+			// Hand Synchronized with specified model
+			return true;
 		}
 		// On Desynchronization
 		else if(instanceId == model.GetInstanceID()){
@@ -100,8 +103,12 @@ public class HandManager {
 			// Sync Hand's Anchors
 			for(int i=0; i<HAND_ANCHOR_COUNT; ++i)
 				handAnchors[i] = null;
+
+			// Hand Unsynchronized
+			return false;
 		}
-		 
+		// Another Hand model
+		return false;
 	}
 	
 	/*******************

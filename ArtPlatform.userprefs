@@ -1,13 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Project\Scripts\MainManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Project\Scripts\Interaction\Gesture\PriestTracker.cs">
     <Files>
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\MoveTracker.cs" Line="86" Column="67" />
-      <File FileName="Assets\Project\Scripts\HandItem\HandItem.cs" Line="62" Column="1" />
-      <File FileName="Assets\Project\Scripts\MainManager.cs" Line="240" Column="32" />
-      <File FileName="Assets\Project\Scripts\Menu\PaintMenu.cs" Line="79" Column="3" />
-      <File FileName="Assets\Project\Scripts\HandManager.cs" Line="30" Column="45" />
-      <File FileName="Assets\Project\Scripts\Menu\ClosedMenu.cs" Line="43" Column="52" />
+      <File FileName="Assets\Project\Scripts\Interaction\Gesture\PriestTracker.cs" Line="38" Column="1" />
+      <File FileName="Assets\Project\Scripts\Interaction\Gesture\PaintTracker.cs" Line="83" Column="1" />
+      <File FileName="Assets\Project\Scripts\Interaction\Gesture\GestureTracker.cs" Line="30" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

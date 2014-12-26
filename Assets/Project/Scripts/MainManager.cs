@@ -65,6 +65,7 @@ public class MainManager : MonoBehaviour {
 	private SimplePickTracker simplePickTracker;
 	private PaintTracker paintTracker;
 	private MoveTracker moveTracker;
+	private PriestTracker priestTracker;
 
 	// Paint's Reference
 	private GameObject currentCanvas;
@@ -131,6 +132,7 @@ public class MainManager : MonoBehaviour {
 		simplePickTracker = new SimplePickTracker (this, rightHand);
 		paintTracker = new PaintTracker (this, leftHand, rightHand);
 		moveTracker = new MoveTracker (this, leftHand, rightHand);
+		priestTracker = new PriestTracker (this, leftHand, rightHand);
 	}
 
 	/****************
@@ -169,10 +171,10 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void SyncLeftHand(HandModel model){
-		leftHand.SyncHand (model);
+		bool synchronized = leftHand.SyncHand (model);
 
 		// Reload Current Menu if needed
-		if(leftHand.IsSynchronized() && currentMenu != null)
+		if(synchronized && currentMenu != null)
 			currentMenu.OnLoad();
 	}
 	
@@ -206,7 +208,10 @@ public class MainManager : MonoBehaviour {
 				
 				// PaintMode Context
 			case ContextOfGesture.PaintMode:
-				
+
+				// Priest Tracker
+				gestureTrackers.Add(priestTracker);
+
 				// Select correct PaintMode Tracker
 				switch(currentPaintMode)
 				{
@@ -224,6 +229,7 @@ public class MainManager : MonoBehaviour {
 				
 				// Move Context
 			case ContextOfGesture.Move:
+				gestureTrackers.Add(priestTracker);
 				gestureTrackers.Add (moveTracker);
 				break;
 				

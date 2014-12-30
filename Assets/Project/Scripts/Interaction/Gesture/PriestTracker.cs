@@ -58,7 +58,7 @@ public class PriestTracker : GestureTracker {
 				}
 				else{
 					// Perform Priest Action
-					Debug.Log ("PriestAction");
+					manager.LoadMenu("InterractionMenu");
 					activated = true;
 					meetedConditionCount = 0;
 				}

@@ -9,15 +9,17 @@ public class SimplePickAction : AbstractAction {
 
 	private ArtMaterial mat;
 	private Vector3 pickPos;
+	private Quaternion pickRot;
 	private GameObject matInstance;
 
 	/******************
 	 *  Constructor   *
 	 ******************/
 	
-	public SimplePickAction(MainManager manager, ArtMaterial matRef, Vector3 pickPosRef) : base(manager){
+	public SimplePickAction(MainManager manager, ArtMaterial matRef, Vector3 pickPosRef, Quaternion pickRotRef) : base(manager){
 		mat = matRef;
 		pickPos = pickPosRef;
+		pickRot = pickRotRef;
 		matInstance = null;
 	}
 	
@@ -29,7 +31,7 @@ public class SimplePickAction : AbstractAction {
 		if (matInstance != null)
 			Debug.LogError ("Impossible to do SimplePickAction : it's already done.");
 		else
-			matInstance = manager.PaintOnCanvas (mat.gameObject, pickPos, Quaternion.identity);
+			matInstance = manager.PaintOnCanvas (mat.gameObject, pickPos, pickRot);
 	}
 	
 	public override void Undo(){

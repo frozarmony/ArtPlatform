@@ -9,6 +9,7 @@ public class MaterialProjectorItem  : HandItem {
 
 	private Transform sphere;
 	private Transform preview;
+	private Vector3 tmpScale;
 	
 	/******************
 	 * Initialization *
@@ -37,8 +38,9 @@ public class MaterialProjectorItem  : HandItem {
 			preview.parent = sphere;
 			preview.localPosition = Vector3.zero;
 		}
-		else
-			preview.localScale = Vector3.zero;
+		else{
+			preview.renderer.enabled = false;
+		}
 	}
 	
 	/******************
@@ -48,7 +50,7 @@ public class MaterialProjectorItem  : HandItem {
 	protected override void OnLoaded(){
 		// Finish Preview Loading if needed
 		if (preview != null) {
-			preview.localScale = Vector3.one;
+			preview.renderer.enabled = true;
 			preview.localRotation = sphere.rotation;
 			preview.parent = sphere;
 			preview.localPosition = Vector3.zero;

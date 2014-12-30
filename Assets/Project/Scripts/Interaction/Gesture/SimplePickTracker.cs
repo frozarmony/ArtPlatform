@@ -8,7 +8,7 @@ public class SimplePickTracker : GestureTracker {
 	 *   Constants  *
 	 ****************/
 	
-	public const int CONDITION_COUNT		= 10;
+	public const int CONDITION_COUNT		= 5;
 	public const float PICK_COEF			= 0.1f;
 	public const float DROP_COEF			= 0.6f;
 	
@@ -63,7 +63,7 @@ public class SimplePickTracker : GestureTracker {
 							++meetedConditionCount;
 						}
 						else{
-							manager.DoAction(new SimplePickAction(manager, mat, pickedElement.transform.position));
+							manager.DoAction(new SimplePickAction(manager, mat, pickedElement.transform.position, pickedElement.transform.rotation));
 							Object.Destroy(pickedElement);
 							pickedElement = null;
 							meetedConditionCount = 0;
@@ -78,10 +78,12 @@ public class SimplePickTracker : GestureTracker {
 	 ******************/
 
 	private void UpdatePickedElement(){
+		Transform thumb = rightHand.GetAnchor (HandManager.HAND_ANCHOR_THUMB);
 		Vector3 pointA = rightHand.GetAnchor (HandManager.HAND_ANCHOR_INDEX).position;
-		Vector3 pointB = rightHand.GetAnchor (HandManager.HAND_ANCHOR_THUMB).position;
+		Vector3 pointB = thumb.position;
 		Vector3 midPoint = new Vector3((pointA.x+pointB.x)/2.0f,(pointA.y+pointB.y)/2.0f,(pointA.z+pointB.z)/2.0f);
 		pickedElement.transform.position = midPoint;
+		pickedElement.transform.rotation = thumb.rotation;
 	}
 
 }

@@ -53,12 +53,14 @@
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Imports\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Imports\LeapMotion\readme.txt" />
+     <None Include="Assets\Resources\Shader\FrontSide.shader" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-LightedOutline.shader" />
      <None Include="Assets\MiddleVRImport\MiddleVR\Assets\Materials\OVRLensCorrection.shader" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Lighted.shader" />
      <None Include="Assets\Imports\LeapMotion\Shaders\LeapDistorted.shader" />
      <None Include="Assets\Imports\LeapMotion\Shaders\LeapUndistorted.shader" />
+     <None Include="Assets\Resources\Shader\BackSide.shader" />
  <Reference Include="LeapCSharp.NET3.5">
  <HintPath>C:/Users/Aryn/Documents/GitHub/ArtPlatform/Assets/LeapCSharp.NET3.5.dll</HintPath>
  </Reference>

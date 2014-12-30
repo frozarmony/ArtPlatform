@@ -104,6 +104,8 @@ public class HandController : MonoBehaviour {
 		Frame frame = GetFrame();
 		UpdateHandModels(hand_physics_, frame.Hands, leftPhysicsModel, rightPhysicsModel);
 		UpdateToolModels(tools_, frame.Tools, toolModel);
+
+		mainManager.OnUpdate ();
 	}
 
 	// Destroy

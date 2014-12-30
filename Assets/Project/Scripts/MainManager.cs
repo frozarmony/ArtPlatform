@@ -9,7 +9,7 @@ public class MainManager : MonoBehaviour {
 	 *       Constants       *
 	 *************************/
 
-	public enum ContextOfGesture {Undefined, Menu, PaintMode, Move};
+	public enum ContextOfGesture {Undefined, Menu, PaintMode, Move, Interraction};
 	public enum PaintMode {SimplePicking, Painting};
 
 	/*************************
@@ -117,14 +117,14 @@ public class MainManager : MonoBehaviour {
 		currentPaintMode = PaintMode.Painting;
 		
 		// Load Main Menu
-		LoadMenu("ClosedMenu");
+		LoadMenu("PaintMenu");
 	}
 	
 	private void InitMenusIndex(){
 		currentMenu = null;
-		menusIndex ["ClosedMenu"] = new ClosedMenu (this);
 		menusIndex ["PaintMenu"] = new PaintMenu (this);
-		menusIndex ["ModeMenu"] = new ModeMenu (this);
+		menusIndex ["PaletteMenu"] = new PaletteMenu (this);
+		menusIndex ["InterractionMenu"] = new InterractionMenu (this);
 	}
 
 	private void InitContextsOfGesture(){
@@ -147,10 +147,10 @@ public class MainManager : MonoBehaviour {
 	 *    Update     *
 	 *****************/
 
-	public void Update(){
+	public void OnUpdate(){
 		// Update each GestureTracker
-		foreach(GestureTracker tracker in gestureTrackers)
-			tracker.OnUpdate();
+		for(int i=0; i<gestureTrackers.Count; ++i)
+			gestureTrackers[i].OnUpdate();
 	}
 
 	/********************
@@ -196,6 +196,16 @@ public class MainManager : MonoBehaviour {
 			foreach(GestureTracker tracker in gestureTrackers)
 				tracker.OnUnload();
 			gestureTrackers.Clear();
+
+			// Unload Interraction Mode if needed
+			if(currentContext == ContextOfGesture.Interraction){
+				Transform canvas = GetCurrentCanvas ();
+				if(canvas != null){
+					foreach(AbstractInterraction interraction in canvas.GetComponentsInChildren<AbstractInterraction> ()){
+						interraction.Unload();
+					}
+				}
+			}
 			
 			// Load New Context
 			switch(newContext)
@@ -233,6 +243,19 @@ public class MainManager : MonoBehaviour {
 				gestureTrackers.Add (moveTracker);
 				break;
 				
+				// Interraction Context
+			case ContextOfGesture.Interraction:
+				gestureTrackers.Add (moveTracker);
+				
+				// Load Interraction Mode
+				Transform canvas = GetCurrentCanvas ();
+				if(canvas != null){
+					foreach(AbstractInterraction interraction in canvas.GetComponentsInChildren<AbstractInterraction> ()){
+						interraction.Load(this);
+					}
+				}
+				break;
+				
 			default:
 				// Do Nothing
 				break;
@@ -246,10 +269,6 @@ public class MainManager : MonoBehaviour {
 			currentContext = newContext;
 		}
 	}
-
-	/****************
-	 * Menu Methods *
-	 ****************/
 	
 	public PaintMode GetPaintMode(){
 		return currentPaintMode;
@@ -258,6 +277,10 @@ public class MainManager : MonoBehaviour {
 	public void SetPaintMode(PaintMode paintMode){
 		currentPaintMode = paintMode;
 	}
+
+	/****************
+	 * Menu Methods *
+	 ****************/
 
 	public void LoadMenu(string menuName){
 		if (!menusIndex.ContainsKey (menuName)) {
@@ -276,12 +299,15 @@ public class MainManager : MonoBehaviour {
 	}
 
 	public void UnloadMenu(){
-		if( currentMenu != null && leftHand.IsSynchronized() ){
-			handItemToBeUnloadedCounter = 0;
-			for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i){
-				foreach(HandItem item in leftHand.GetAnchor(i).GetComponentsInChildren<HandItem>()){
-					item.StartUnloading();
-					++handItemToBeUnloadedCounter;
+		if( currentMenu != null ){
+			// HandItem's Unloading
+			if(leftHand.IsSynchronized()){
+				handItemToBeUnloadedCounter = 0;
+				for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i){
+					foreach(HandItem item in leftHand.GetAnchor(i).GetComponentsInChildren<HandItem>()){
+						item.StartUnloading();
+						++handItemToBeUnloadedCounter;
+					}
 				}
 			}
 		}
@@ -295,7 +321,7 @@ public class MainManager : MonoBehaviour {
 			if( currentMenu != null )
 				for(int i=0; i<HandManager.HAND_ANCHOR_COUNT; ++i)
 					UnloadHandItem(i);
-			
+
 			// Load Menu
 			if(leftHand.IsSynchronized())
 				currentMenu.OnLoad();
@@ -390,7 +416,9 @@ public class MainManager : MonoBehaviour {
 			return null;
 		}
 		else {
-			GameObject matInstance = (GameObject)Instantiate (matPrefab, pos, rotation);
+			GameObject matInstance = (GameObject)Instantiate (matPrefab);
+			matInstance.transform.position = pos;
+			matInstance.transform.rotation = rotation;
 			matInstance.transform.parent = currentCanvas.transform;
 			return matInstance;
 		}

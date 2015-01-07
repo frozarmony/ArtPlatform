@@ -26,7 +26,8 @@ public class MoveTracker : GestureTracker {
 	 *  Constructor   *
 	 ******************/
 	
-	public MoveTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef) : base(manager){
+	public MoveTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef):
+	base(manager, new HelpMessage[]{new HelpMessage("Close fits to move canvas.",manager.closedFistHelpTexture)}){
 		this.rightHand = rightHandRef;
 		this.leftHand = leftHandRef;
 		this.lastRightHandPosition = Vector3.zero;

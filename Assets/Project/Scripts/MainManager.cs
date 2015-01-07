@@ -34,6 +34,11 @@ public class MainManager : MonoBehaviour {
 	public Texture movingModeTexture;
 	public Texture pickingModeTexture;
 	public Texture paintingModeTexture;
+	public Texture interractModeTexture;
+
+	public Texture2D priestHelpTexture;
+	public Texture2D closedFistHelpTexture;
+	public Texture2D clickHelpTexture;
 	
 	/*************************
 	 *    General's Prefab    *
@@ -42,6 +47,14 @@ public class MainManager : MonoBehaviour {
 	public GameObject canvasPrefab;
 	public GameObject painterPrefab;
 	public GameObject onTouchExplosionPrefab;
+	
+	/*************************
+	 *         Sounds        *
+	 *************************/
+
+	public AudioClip mainTheme;
+	public AudioClip bipSelection;
+	public AudioClip switchMenu;
 
 	/****************
 	 *  References  *
@@ -78,6 +91,9 @@ public class MainManager : MonoBehaviour {
 	private List<ArtMaterial> paintingPalette;
 	private int cursorSimplePickPalette;
 	private int cursorPaintingPalette;
+
+	// GUI's References
+	private GUIStyle helpMessageStyle;
 	
 	/****************
 	 * Constructor  *
@@ -111,17 +127,25 @@ public class MainManager : MonoBehaviour {
 
 		// Init Contexts Of Gesture
 		InitContextsOfGesture ();
+
+		// Init Help Message Style
+		helpMessageStyle = new GUIStyle ();
+		helpMessageStyle.padding = new RectOffset(20, 0, 20, 20);
+		helpMessageStyle.normal.textColor = Color.white;
+		helpMessageStyle.fontSize = 18;
+		helpMessageStyle.alignment = TextAnchor.UpperLeft;
 		
 		// Create Empty Canvas
 		CreateNewCanvas();
 		currentPaintMode = PaintMode.Painting;
 		
 		// Load Main Menu
-		LoadMenu("PaintMenu");
+		LoadMenu("MainMenu");
 	}
 	
 	private void InitMenusIndex(){
 		currentMenu = null;
+		menusIndex ["MainMenu"] = new MainMenu (this);
 		menusIndex ["PaintMenu"] = new PaintMenu (this);
 		menusIndex ["PaletteMenu"] = new PaletteMenu (this);
 		menusIndex ["InterractionMenu"] = new InterractionMenu (this);
@@ -153,6 +177,16 @@ public class MainManager : MonoBehaviour {
 			gestureTrackers[i].OnUpdate();
 	}
 
+	public void OnGUI(){
+		GUILayout.BeginVertical ( GUILayout.Width(300) );
+		for(int i=0; i<gestureTrackers.Count; ++i){
+			foreach(GestureTracker.HelpMessage msg in gestureTrackers[i].GetHelpMessages()){
+				GUILayout.Box (new GUIContent (msg.message, msg.image), helpMessageStyle, GUILayout.Height (80));
+			}
+		}
+		GUILayout.EndVertical ();
+	}
+
 	/********************
 	 * WorkShop Methods *
 	 ********************/
@@ -160,14 +194,24 @@ public class MainManager : MonoBehaviour {
 	public Transform GetMainCamera(){
 		return this.transform.FindChild("MainCamera");
 	}
+
+	public HandManager GetRightHand(){
+		return rightHand;
+	}
+
+	public HandManager GetLeftHand(){
+		return leftHand;
+	}
 	
 	/*****************
 	 * Event Methods *
 	 *****************/
 
 	public void NotifyButtonPush(int handAnchorId){
-		if (currentMenu != null)
+		if (currentMenu != null){
 			currentMenu.OnTouch (handAnchorId);
+			audio.PlayOneShot(bipSelection);
+		}
 	}
 
 	public void SyncLeftHand(HandModel model){
@@ -239,12 +283,13 @@ public class MainManager : MonoBehaviour {
 				
 				// Move Context
 			case ContextOfGesture.Move:
-				gestureTrackers.Add(priestTracker);
+				gestureTrackers.Add (priestTracker);
 				gestureTrackers.Add (moveTracker);
 				break;
 				
 				// Interraction Context
 			case ContextOfGesture.Interraction:
+				gestureTrackers.Add (priestTracker);
 				gestureTrackers.Add (moveTracker);
 				
 				// Load Interraction Mode
@@ -292,6 +337,7 @@ public class MainManager : MonoBehaviour {
 
 			// Set Menu to be loaded asynchronously
 			currentMenu = menusIndex[menuName];
+			audio.PlayOneShot(switchMenu);
 			
 			// Set Corresponding Context of Gesture
 			SetContextOfGesture(currentMenu.GetContextOfGesture());
@@ -309,6 +355,9 @@ public class MainManager : MonoBehaviour {
 						++handItemToBeUnloadedCounter;
 					}
 				}
+
+				if(handItemToBeUnloadedCounter == 0)
+					NotifyHandItemUnloaded();
 			}
 		}
 	}

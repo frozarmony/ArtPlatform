@@ -95,6 +95,8 @@ public class HandController : MonoBehaviour {
 		Frame frame = GetFrame();
 		UpdateHandModels(hand_graphics_, frame.Hands, leftGraphicsModel, rightGraphicsModel);
 		//leaplistener.OnNewFrame (leap_controller_);
+		
+		mainManager.OnUpdate ();
 	}
 	
 	void FixedUpdate() {
@@ -104,8 +106,6 @@ public class HandController : MonoBehaviour {
 		Frame frame = GetFrame();
 		UpdateHandModels(hand_physics_, frame.Hands, leftPhysicsModel, rightPhysicsModel);
 		UpdateToolModels(tools_, frame.Tools, toolModel);
-
-		mainManager.OnUpdate ();
 	}
 
 	// Destroy

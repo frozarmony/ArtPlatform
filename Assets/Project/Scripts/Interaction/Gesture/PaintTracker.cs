@@ -24,7 +24,8 @@ public class PaintTracker : GestureTracker {
 	 *  Constructor   *
 	 ******************/
 	
-	public PaintTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef) : base(manager){
+	public PaintTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef) : 
+	base(manager, new HelpMessage[]{new HelpMessage("Close left fist to paint with right finger.",manager.closedFistHelpTexture)}){
 		this.controlHand = leftHandRef;
 		this.paintHand = rightHandRef;
 		this.paintTrace = null;

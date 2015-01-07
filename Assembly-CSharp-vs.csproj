@@ -99,6 +99,7 @@
      <Compile Include="Assets\Project\Scripts\ArtMaterial\ArtPaintingMaterial.cs" />
      <Compile Include="Assets\Project\Scripts\ArtMaterial\Interaction\AbstractInterraction.cs" />
      <Compile Include="Assets\Project\Scripts\ArtMaterial\Interaction\GoBack.cs" />
+     <Compile Include="Assets\Project\Scripts\ArtMaterial\Interaction\Repulse.cs" />
      <Compile Include="Assets\Project\Scripts\Common\LookAtCamera.cs" />
      <Compile Include="Assets\Project\Scripts\Common\ParticleSystemAutoDestrcut.cs" />
      <Compile Include="Assets\Project\Scripts\HandItem\ButtonItem\ButtonItem.cs" />
@@ -121,6 +122,7 @@
      <Compile Include="Assets\Project\Scripts\MainManager.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\HandMenu.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\InterractionMenu.cs" />
+     <Compile Include="Assets\Project\Scripts\Menu\MainMenu.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\PaintMenu.cs" />
      <Compile Include="Assets\Project\Scripts\Menu\PaletteMenu.cs" />
      <None Include="Assets\Imports\LeapMotion\Materials\Sources\Shaders\Toony-Basic.shader" />

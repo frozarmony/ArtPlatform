@@ -24,7 +24,8 @@ public class PriestTracker : GestureTracker {
 	 *  Constructor   *
 	 ******************/
 	
-	public PriestTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef) : base(manager){
+	public PriestTracker(MainManager manager, HandManager leftHandRef, HandManager rightHandRef) : 
+	base(manager, new HelpMessage[]{new HelpMessage("Join hands to back to main menu.",manager.priestHelpTexture)}){
 		this.rightHand = rightHandRef;
 		this.leftHand = leftHandRef;
 		this.meetedConditionCount = 0;
@@ -41,7 +42,7 @@ public class PriestTracker : GestureTracker {
 	}
 	
 	public override void OnUpdate(){
-		if (!rightHand.IsSynchronized () || !leftHand.IsSynchronized() ) {											// Handle Reset On Hand Desynchronisation
+		if (!rightHand.IsSynchronized () || !leftHand.IsSynchronized() ) {					// Handle Reset On Hand Desynchronisation
 			meetedConditionCount = 0;
 		}
 		else if(!activated){
@@ -57,10 +58,12 @@ public class PriestTracker : GestureTracker {
 					++meetedConditionCount;
 				}
 				else{
-					// Perform Priest Action
-					manager.LoadMenu("InterractionMenu");
+					// Oneshot Gesture
 					activated = true;
 					meetedConditionCount = 0;
+
+					// Perform Priest Action
+					manager.LoadMenu("MainMenu");
 				}
 			}
 		}

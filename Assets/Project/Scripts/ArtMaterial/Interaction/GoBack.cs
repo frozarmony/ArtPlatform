@@ -9,6 +9,8 @@ public class GoBack : AbstractInterraction {
 	
 	private Vector3 originPosition;
 	private Quaternion originRotation;
+	private Quaternion endRotation;
+	private float fractionRotation;
 
 	/******************
 	 *  Constructor   *
@@ -29,8 +31,8 @@ public class GoBack : AbstractInterraction {
 			Debug.LogError("Error : This ArtMaterial (" + this + ") must have a collider to use GoBack Script");
 		
 		// Save origin transform
-		originPosition = this.transform.position;
-		originRotation = this.transform.rotation;
+		originPosition = this.transform.localPosition;
+		originRotation = this.transform.localRotation;
 
 		// Load necessary components
 		this.gameObject.AddComponent<Rigidbody> ();
@@ -39,15 +41,28 @@ public class GoBack : AbstractInterraction {
 	}
 
 	protected override void OnUpdate (){
-		if(this.transform.position != originPosition || this.transform.rotation!= originRotation){
+		if(this.transform.localPosition != originPosition || this.transform.rotation!= originRotation){
 			// Translate
-			Vector3 idealTranslateVelocity = originPosition - transform.position;
+			Vector3 idealTranslateVelocity = originPosition - transform.localPosition;
 			Vector3 force = idealTranslateVelocity - rigidbody.velocity;
 			rigidbody.AddForce(force * 0.5f);
 
 			// Rotation
-			/*Quaternion.
-			Vector3 idealAngularVelocity = originRotation transform.rotation;
+			float distance = idealTranslateVelocity.sqrMagnitude;
+			if(distance > 0.1f){
+				fractionRotation = 0;
+				endRotation = transform.localRotation;
+			}
+			else if(fractionRotation < 1f){
+				fractionRotation += 0.001f;
+				transform.localRotation = Quaternion.Lerp(endRotation, originRotation, fractionRotation);
+			}
+			else{
+				// Reset origin transform
+				this.transform.localPosition = originPosition;
+				this.transform.localRotation = originRotation;
+			}
+			/*Vector3 idealAngularVelocity = originRotation - transform.rotation;
 			Vector3 torque = idealAngularVelocity - rigidbody.angularVelocity;
 			rigidbody.AddRelativeTorque(torque * 0.1f);*/
 		}
@@ -59,8 +74,8 @@ public class GoBack : AbstractInterraction {
 		this.collider.enabled = false;
 
 		// Reset origin transform
-		this.transform.position = originPosition;
-		this.transform.rotation = originRotation;
+		this.transform.localPosition = originPosition;
+		this.transform.localRotation = originRotation;
 	}
 
 

@@ -10,6 +10,7 @@ public class PaletteMenu : HandMenu {
 	private int closeButtonId;
 	private int nextMatButtonId;
 	private int previousMatButtonId;
+	private int colorButtonId;
 	private int pickingButtonId;
 	private int paintingButtonId;
 
@@ -31,6 +32,7 @@ public class PaletteMenu : HandMenu {
 		closeButtonId = HandManager.HAND_ANCHOR_PALM;
 		previousMatButtonId = HandManager.HAND_ANCHOR_THUMB_BASE;
 		nextMatButtonId = HandManager.HAND_ANCHOR_THUMB_MIDDLE;
+		colorButtonId = HandManager.HAND_ANCHOR_THUMB;
 		pickingButtonId = HandManager.HAND_ANCHOR_INDEX;
 		paintingButtonId = HandManager.HAND_ANCHOR_MIDDLE;
 
@@ -48,6 +50,7 @@ public class PaletteMenu : HandMenu {
 		manager.LoadHandItem (CreateStandardButton(manager.closeButton, manager, closeButtonId));
 		manager.LoadHandItem (CreateStandardButton(manager.arrowButton, manager, nextMatButtonId), new Vector3(0,0,90));
 		manager.LoadHandItem (CreateStandardButton(manager.arrowButton, manager, previousMatButtonId), new Vector3(0,0,-90));
+		manager.LoadHandItem (CreateChoiceButton (manager, colorButtonId, manager.colorMenuTexture), new Vector3(90,0,0));
 		manager.LoadHandItem (CreateChoiceButton(manager, pickingButtonId, manager.pickingModeTexture));
 		manager.LoadHandItem (CreateChoiceButton(manager, paintingButtonId, manager.paintingModeTexture));
 
@@ -63,6 +66,9 @@ public class PaletteMenu : HandMenu {
 	public override void OnTouch(int hanchorId){
 		if (hanchorId == closeButtonId)
 			manager.LoadMenu ("PaintMenu");
+		else if (hanchorId == colorButtonId) {
+			manager.LoadMenu ("ColorMenu");
+		}
 		else if (hanchorId == pickingButtonId) {
 			manager.SetPaintMode(MainManager.PaintMode.SimplePicking);
 		} else if (hanchorId == paintingButtonId) {

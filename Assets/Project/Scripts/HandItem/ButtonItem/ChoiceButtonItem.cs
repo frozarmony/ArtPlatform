@@ -19,6 +19,17 @@ public class ChoiceButtonItem : ButtonItem {
 			choiceDisplay.renderer.material.mainTexture = choiceTexture;
 		}
 	}
+
+	public void SetMainColors(Color mainColor, Color specularColor){
+		// Find ChoiceDisplay Ref
+		Transform choiceDisplay = this.transform.FindChild("ChoiceDisplay");
+
+		if(choiceDisplay != null){			
+			// Init Choice Texture
+			choiceDisplay.renderer.material.SetColor("_Color", specularColor);
+			choiceDisplay.renderer.material.SetColor("_SpecColor", specularColor);
+		}
+	}
 	
 	/******************
 	 * Implementation *

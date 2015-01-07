@@ -31,6 +31,9 @@ public class MainManager : MonoBehaviour {
 	 *    Mode's Textures    *
 	 *************************/
 	
+	public Texture backArrowTexture;
+	public Texture colorDisplayTexture;
+	public Texture colorMenuTexture;
 	public Texture movingModeTexture;
 	public Texture pickingModeTexture;
 	public Texture paintingModeTexture;
@@ -87,6 +90,8 @@ public class MainManager : MonoBehaviour {
 	private Stack<AbstractAction> undoneAction;
 
 	// Palette's References
+	private Color[] colorPalette;
+	private int cursorColorPalette;
 	private List<ArtMaterial> simplePickPalette;
 	private List<ArtMaterial> paintingPalette;
 	private int cursorSimplePickPalette;
@@ -148,6 +153,7 @@ public class MainManager : MonoBehaviour {
 		menusIndex ["MainMenu"] = new MainMenu (this);
 		menusIndex ["PaintMenu"] = new PaintMenu (this);
 		menusIndex ["PaletteMenu"] = new PaletteMenu (this);
+		menusIndex ["ColorMenu"] = new ColorMenu (this);
 		menusIndex ["InterractionMenu"] = new InterractionMenu (this);
 	}
 
@@ -157,6 +163,22 @@ public class MainManager : MonoBehaviour {
 		paintTracker = new PaintTracker (this, leftHand, rightHand);
 		moveTracker = new MoveTracker (this, leftHand, rightHand);
 		priestTracker = new PriestTracker (this, leftHand, rightHand);
+	}
+
+	private void InitColorPalette(){
+		colorPalette = new Color[]{
+			new Color (128, 128, 128),
+			new Color (128, 0, 0),
+			new Color (128, 47, 0),
+			new Color (128, 108, 0),
+			new Color (31, 128, 0),
+			new Color (0, 128, 43),
+			new Color (0, 96, 128),
+			new Color (0, 33, 128),
+			new Color (52, 0, 128),
+			new Color (128, 0, 66)
+		};
+		cursorColorPalette = 0;
 	}
 
 	/****************
@@ -483,7 +505,7 @@ public class MainManager : MonoBehaviour {
 			for(int i=0; i<particleCount; ++i){
 				particles[i].position = Random.insideUnitSphere * size;
 				particles[i].size = granularity;
-				particles[i].color = new Color(0,90,190);
+				particles[i].color = colorPalette[cursorColorPalette];
 				particles[i].rotation = Random.Range(0f,360f);
 			}
 
@@ -503,6 +525,21 @@ public class MainManager : MonoBehaviour {
 	/*******************
 	 * Palette Methods *
 	 *******************/
+
+	public Color[] GetColorPalette(){
+		return colorPalette;
+	}
+
+	public int GetCursorColorPalette(){
+		return cursorColorPalette;
+	}
+
+	public void SetCursorColorPalette(int cursor){
+		int colorCount = colorPalette.Length;
+		if( 0 <= cursor && cursor < colorCount ){
+			cursorColorPalette = cursor;
+		}
+	}
 
 	private void LoadPalette(){
 		// Load Palette's Materials

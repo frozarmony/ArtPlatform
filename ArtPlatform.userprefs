@@ -1,13 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Project\Scripts\Interaction\Gesture\SimplePickTracker.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Project\Scripts\MainManager.cs">
     <Files>
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\PriestTracker.cs" Line="28" Column="82" />
-      <File FileName="Assets\Project\Scripts\MainManager.cs" Line="184" Column="98" />
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\PaintTracker.cs" Line="28" Column="93" />
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\MoveTracker.cs" Line="29" Column="93" />
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\SimplePickTracker.cs" Line="27" Column="76" />
-      <File FileName="Assets\Project\Scripts\Interaction\Gesture\GestureTracker.cs" Line="34" Column="38" />
+      <File FileName="Assets\Project\Scripts\Menu\ColorMenu.cs" Line="53" Column="13" />
+      <File FileName="Assets\Project\Scripts\Menu\PaletteMenu.cs" Line="69" Column="41" />
+      <File FileName="Assets\Project\Scripts\Menu\PaintMenu.cs" Line="43" Column="57" />
+      <File FileName="Assets\Project\Scripts\MainManager.cs" Line="507" Column="37" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

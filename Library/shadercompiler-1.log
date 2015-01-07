@@ -1,7 +1,23 @@
-Base path: C:/Program Files (x86)/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-1-6800
+Base path: E:/Users/Frozarmony/Programmes/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-1-3920
 Cmd: getPlatforms
-Cmd: compileSnippet
-  api=4 type=0 insize=4358 outsize=4329 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF VERTEXLIGHT_ON ok=1
-Cmd: compileSnippet
-  api=4 type=0 insize=4573 outsize=4337 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_OFF VERTEXLIGHT_ON ok=1
+Cmd: preprocess
+  insize=447 outsize=447 ok=1
+Cmd: preprocess
+  insize=766 outsize=1254 ok=1
+Cmd: preprocess
+  insize=1048 outsize=887 ok=1
+Cmd: preprocess
+  insize=1347 outsize=439 ok=1
+Cmd: preprocess
+  insize=3269 outsize=1124 ok=1
+Cmd: preprocess
+  insize=600 outsize=1254 ok=1
+Cmd: preprocess
+  insize=1576 outsize=991 ok=1
+Cmd: preprocess
+  insize=2281 outsize=440 ok=1
+Cmd: preprocess
+  insize=1500 outsize=667 ok=1
+Cmd: preprocess
+  insize=1725 outsize=1007 ok=1
